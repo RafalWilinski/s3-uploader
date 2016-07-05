@@ -1,0 +1,38 @@
+{
+  "name": "s3-uploader",
+  "version": "0.0.1",
+  "description": "AWS S3 Uploader ",
+  "main": "main.js",
+  "scripts": {
+    "start": "webpack -w & electron ."
+  },
+  "keywords": [
+    "Electron",
+    "S3",
+    "Amazon Web Services",
+    "React"
+  ],
+  "author": "Rafal Wilinski",
+  "license": "GPL",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "css-loader": "^0.23.1",
+    "devtron": "^1.2.1",
+    "electron-prebuilt": "^1.2.0",
+    "node-sass": "^3.8.0",
+    "sass-loader": "^4.0.0",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.4.4",
+    "electron-debug": "^1.0.1",
+    "menubar": "^4.1.2",
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0"
+  }
+}
