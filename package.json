@@ -22,6 +22,7 @@
     "babel-preset-react": "^6.11.1",
     "css-loader": "^0.23.1",
     "devtron": "^1.2.1",
+    "electron-debug": "^1.0.1",
     "electron-prebuilt": "^1.2.0",
     "node-sass": "^3.8.0",
     "sass-loader": "^4.0.0",
@@ -30,9 +31,10 @@
   },
   "dependencies": {
     "aws-sdk": "^2.4.4",
-    "electron-debug": "^1.0.1",
+    "bunyan": "^1.8.1",
     "menubar": "^4.1.2",
     "react": "^15.2.0",
-    "react-dom": "^15.2.0"
+    "react-dom": "^15.2.0",
+    "request": "^2.72.0"
   }
 }

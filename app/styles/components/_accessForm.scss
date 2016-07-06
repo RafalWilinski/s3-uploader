@@ -4,18 +4,22 @@
   align-content: center;
   align-items: center;
   justify-content: center;
-  height: 95vh;
-  div {
-    form {
-      display: flex;
-      flex-direction: column;
-      align-content: center;
-      align-items: center;
-      justify-content: center;
+  height: 90vh;
 
-      input {
-        width: 200px;
-      }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+
+    input {
+      width: 200px;
+    }
+
+    #submitButton {
+      margin-top: 5px;
     }
   }
 }
