@@ -27,7 +27,7 @@ class S3Service {
       this.s3.listBuckets((err, data) => {
         if (err) {
           log.error('Failed to fetch S3 buckets', err);
-          return reject();
+          return reject(err);
         } else {
           log.info('Buckets data fetched', data);
           return resolve(data);

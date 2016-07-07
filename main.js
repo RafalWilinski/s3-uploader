@@ -1,17 +1,19 @@
 const menubar = require('menubar');
-const {app, Tray} = require('electron');
-require('electron-debug')({showDevTools: true});
 
-app.on('ready', () => {
-  const tray = new Tray('./public/icon.png');
-  const mb = menubar({
-    width: 400,
-    height: 300,
-    tray
-  });
+const mb = menubar({
+  width: 400,
+  height: 300,
+});
 
-  tray.on('drop-files', (event, files) => {
-    console.log(event);
-    console.log(files);
-  });
+mb.on('ready', () => {
+  console.log('MenuBar is ready.');
+});
+
+console.log(Object.keys(mb));
+console.log(mb.getOption('tray'));
+console.log(Object.keys(mb.app));
+
+
+mb.on('drop-files', (files) => {
+  console.log(files);
 });
