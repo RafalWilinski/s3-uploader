@@ -33,15 +33,6 @@ class BucketSelector extends React.Component {
               </label>
             </li>
           )}
-          {this.props.buckets.map((bucket, index) =>
-            <li key={index}>
-              <label for={index}>
-                <input onClick={(e) => this.changeDefault(bucket.Name)} type="radio" name="bucket"
-                       id={index}/>
-                {bucket.Name}
-              </label>
-            </li>
-          )}
         </form>
         <button onClick={this.props.rightsSelect}>
           Select default upload rights
