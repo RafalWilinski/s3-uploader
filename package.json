@@ -31,11 +31,9 @@
   },
   "dependencies": {
     "aws-sdk": "^2.4.4",
-    "bunyan": "^1.8.1",
     "menubar": "^4.1.2",
     "react": "^15.2.0",
     "react-dom": "^15.2.0",
-    "react-spinner": "^0.2.6",
     "request": "^2.72.0"
   }
 }

@@ -1,19 +1,18 @@
 const menubar = require('menubar');
+const fs = require('fs');
 
 const mb = menubar({
   width: 400,
   height: 300,
 });
 
+const handleFiles = (files) => {
+  files.forEach((filePath) => {
+
+  });
+};
+
 mb.on('ready', () => {
-  console.log('MenuBar is ready.');
+  mb.tray.on('drop-files', (files) => handleFiles(files));
 });
 
-console.log(Object.keys(mb));
-console.log(mb.getOption('tray'));
-console.log(Object.keys(mb.app));
-
-
-mb.on('drop-files', (files) => {
-  console.log(files);
-});

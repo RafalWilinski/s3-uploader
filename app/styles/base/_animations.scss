@@ -1,3 +1,4 @@
+// Wrong input animation
 @keyframes shake {
   from, to {
     transform: translate3d(0, 0, 0);
@@ -34,4 +35,62 @@
 .animated.bounceIn,
 .animated.bounceOut {
   animation-duration: .75s;
+}
+
+
+// Loading Animation
+$boxSize: 15;
+$color: #dfdedd;
+$color2: #4f4d49;
+
+.spin-box {
+  position: absolute;
+  margin: auto;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 100%;
+  width: $boxSize * 1px;
+  height: $boxSize * 1px;
+  box-shadow:
+  $boxSize*1px  $boxSize*1px $color2,
+  $boxSize*-1px  $boxSize*1px $color,
+  $boxSize*-1px  $boxSize*-1px $color2,
+  $boxSize*1px  $boxSize*-1px $color;
+  animation: spin ease infinite 4s;
+}
+
+@keyframes spin {
+  0%, 100% {
+    box-shadow:
+    $boxSize*1px  $boxSize*1px $color2,
+    $boxSize*-1px  $boxSize*1px $color,
+    $boxSize*-1px  $boxSize*-1px $color2,
+    $boxSize*1px  $boxSize*-1px $color;
+  }
+
+  25% {
+    box-shadow:
+    $boxSize*-1px  $boxSize*1px $color,
+    $boxSize*-1px  $boxSize*-1px $color2,
+    $boxSize*1px  $boxSize*-1px $color,
+    $boxSize*1px  $boxSize*1px $color2;
+  }
+
+  50% {
+    box-shadow:
+    $boxSize*-1px  $boxSize*-1px $color2,
+    $boxSize*1px  $boxSize*-1px $color,
+    $boxSize*1px  $boxSize*1px $color2,
+    $boxSize*-1px  $boxSize*1px $color;
+  }
+
+  75% {
+    box-shadow:
+    $boxSize*1px  $boxSize*-1px $color,
+    $boxSize*1px  $boxSize*1px $color2,
+    $boxSize*-1px  $boxSize*1px $color,
+    $boxSize*-1px  $boxSize*-1px $color2;
+  }
 }

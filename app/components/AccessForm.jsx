@@ -18,6 +18,18 @@ class AccessForm extends React.Component {
     this.handleSecretKeyChange = this._handleSecretKeyChange.bind(this);
   };
 
+  componentDidMount() {
+    const savedAccessKey = window.localStorage.getItem('accessKey') || '';
+    const savedSecretKey = window.localStorage.getItem('secretKey') || '';
+    document.getElementById('access_key_input').value = savedAccessKey;
+    document.getElementById('secret_key_input').value = savedSecretKey;
+
+    this.setState({
+      accessKey: savedAccessKey,
+      secretKey: savedSecretKey,
+    });
+  }
+
   _handleSubmit(event) {
     event.preventDefault();
     const accessKey = this.state.accessKey.trim();
@@ -31,12 +43,14 @@ class AccessForm extends React.Component {
 
       const s3 = new S3Service(accessKey, secretKey);
 
-      s3.getBuckets()
-        .then((data) => {
+      s3.getBuckets().then((data) => {
         this.setState({
           isLoading: false
         });
+
+        this.props.onBucketsLoaded(data);
       }).catch((error) => {
+        console.log(error);
         this.setState({
           isLoading: false,
           error
@@ -74,11 +88,12 @@ class AccessForm extends React.Component {
     return (
       <div className="access-form-container">
         <div>
-          <p>In order to access S3, please provide AWS Access Key and Secret Key of user with
-            sufficient permissions</p>
           { this.state.isLoading
-            ? <h1>Loading...</h1>
-            : <form onSubmit={this.handleSubmit}>
+            ? <div className="spin-box"></div>
+            : <div>
+            <p>In order to access S3, please provide AWS Access Key and Secret Key of user with
+              sufficient permissions</p>
+            <form onSubmit={this.handleSubmit}>
               <input type="text"
                      name="access_key"
                      placeholder="AWS Access Key"
@@ -97,6 +112,7 @@ class AccessForm extends React.Component {
                 value="Submit"
               />
             </form>
+          </div>
           }
           { this.state.error !== null
             ? <p>{this.state.error.message}</p> : ''
@@ -106,5 +122,9 @@ class AccessForm extends React.Component {
     );
   };
 }
+
+AccessForm.propTypes = {
+  onBucketsLoaded: React.PropTypes.func.isRequired,
+};
 
 export default AccessForm;

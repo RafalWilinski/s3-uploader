@@ -1,9 +1,18 @@
 import React from 'react';
 
-const BucketSelector = () => {
+const BucketSelector = (props) => {
   return (
-    <h2>BucketSelector</h2>
+    <div>
+      <h1>Buckets</h1>
+      {props.buckets.map((bucket, index) =>
+        <p key={index}>{bucket.Name}</p>
+      )}
+    </div>
   );
 };
+
+BucketSelector.propTypes = {
+  buckets: React.PropTypes.array.isRequired,
+}
 
 export default BucketSelector;
