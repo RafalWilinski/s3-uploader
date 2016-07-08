@@ -11,6 +11,14 @@ class BucketSelector extends React.Component {
     this.changeDefault = this._changeDefault.bind(this);
   }
 
+  componentDidMount() {
+    this.props.buckets.forEach((bucket, index) => {
+      if (bucket.Name === window.localStorage.getItem('default_bucket')) {
+        document.getElementById(index).checked = true;
+      }
+    });
+  }
+
   _changeDefault(defaultBucketName) {
     this.setState({
       current: defaultBucketName
