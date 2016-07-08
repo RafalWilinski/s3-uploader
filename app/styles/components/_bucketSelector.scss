@@ -6,8 +6,12 @@
   justify-content: center;
   height: 90vh;
 
-  ul {
+  form {
     list-style: none;
+    overflow:hidden;
+    overflow-y:scroll;
+    height: 50vh;
+    border: solid 1px #EEEEEE;
   }
 
   li {
@@ -17,7 +21,11 @@
 
   .bucket-selector-head {
     font-size: 1em;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 5px;
+  }
+
+  button {
+    margin-top: 10px;
   }
 }
