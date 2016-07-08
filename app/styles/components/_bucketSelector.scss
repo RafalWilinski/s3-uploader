@@ -1,0 +1,23 @@
+.bucket-selector-container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    margin: 2px;
+  }
+
+  .bucket-selector-head {
+    font-size: 1em;
+    margin-top: 20px;
+    margin-bottom: 5px;
+  }
+}

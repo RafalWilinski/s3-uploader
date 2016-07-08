@@ -1,8 +1,14 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 html, body, #app {
   height: 90vh;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
 }

@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const mb = menubar({
   width: 400,
-  height: 300,
+  height: 200,
 });
 
 const handleFiles = (files) => {
