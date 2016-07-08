@@ -19,12 +19,10 @@ class BucketSelector extends React.Component {
     });
   }
 
-  _changeDefault(defaultBucketName) {
+  _changeDefault(current) {
     this.setState({
-      current: defaultBucketName
+      current
     });
-
-    window.localStorage.setItem('default_bucket', defaultBucketName);
   };
 
   render() {
@@ -35,14 +33,16 @@ class BucketSelector extends React.Component {
           {this.props.buckets.map((bucket, index) =>
             <li key={index}>
               <label for={index}>
-                <input onClick={(e) => this.changeDefault(bucket.Name)} type="radio" name="bucket"
+                <input onClick={(e) => this.changeDefault(bucket.Name)}
+                       type="radio"
+                       name="bucket"
                        id={index}/>
                 {bucket.Name}
               </label>
             </li>
           )}
         </form>
-        <button onClick={this.props.rightsSelect}>
+        <button onClick={(e) => this.props.onBucketSelected(this.state.current)}>
           Select default upload rights
         </button>
       </div>
@@ -52,7 +52,7 @@ class BucketSelector extends React.Component {
 
 BucketSelector.propTypes = {
   buckets: React.PropTypes.array.isRequired,
-  rightsSelect: React.PropTypes.func.isRequired,
+  onBucketSelected: React.PropTypes.func.isRequired,
 };
 
 export default BucketSelector;

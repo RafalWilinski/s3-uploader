@@ -1,16 +1,15 @@
 import React from 'react';
-import S3Service from '../S3Service';
 
 import '../styles/base/_animations.scss';
 
 class AccessForm extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       accessKey: '',
       secretKey: '',
       isLoading: false,
-      error: null,
     };
 
     this.handleSubmit = this._handleSubmit.bind(this);
@@ -30,6 +29,12 @@ class AccessForm extends React.Component {
     });
   }
 
+  componentWillReceiveProps() {
+    this.setState({
+      isLoading: false
+    })
+  }
+
   _handleSubmit(event) {
     event.preventDefault();
     const accessKey = this.state.accessKey.trim();
@@ -38,24 +43,9 @@ class AccessForm extends React.Component {
     if (accessKey !== '' && secretKey !== '') {
       this.setState({
         isLoading: true,
-        error: null
       });
 
-      const s3 = new S3Service(accessKey, secretKey);
-
-      s3.getBuckets().then((data) => {
-        this.setState({
-          isLoading: false
-        });
-
-        this.props.onBucketsLoaded(data);
-      }).catch((error) => {
-        console.log(error);
-        this.setState({
-          isLoading: false,
-          error
-        });
-      });
+      this.props.onCredentialsSubmitted(accessKey, secretKey);
     } else {
       if (accessKey === '') {
         document.getElementById('access_key_input').focus();
@@ -114,8 +104,8 @@ class AccessForm extends React.Component {
             </form>
           </div>
           }
-          { this.state.error !== null
-            ? <p>{this.state.error.message}</p> : ''
+          { this.props.error !== null
+            ? <p>{this.props.error.message}</p> : ''
           }
         </div>
       </div>
@@ -124,7 +114,8 @@ class AccessForm extends React.Component {
 }
 
 AccessForm.propTypes = {
-  onBucketsLoaded: React.PropTypes.func.isRequired,
+  onCredentialsSubmitted: React.PropTypes.func.isRequired,
+  error: React.PropTypes.object.isRequired,
 };
 
 export default AccessForm;
