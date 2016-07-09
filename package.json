@@ -4,7 +4,8 @@
   "description": "AWS S3 Uploader ",
   "main": "main.js",
   "scripts": {
-    "start": "webpack -w & electron ."
+    "start": "webpack -w & electron .",
+    "eslint": "eslint ."
   },
   "keywords": [
     "Electron",
@@ -13,7 +14,11 @@
     "React"
   ],
   "author": "Rafal Wilinski",
-  "license": "GPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RafalWilinski/s3-uploader.git"
+  },
+  "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-core": "^6.10.4",
@@ -24,6 +29,9 @@
     "devtron": "^1.2.1",
     "electron-debug": "^1.0.1",
     "electron-prebuilt": "^1.2.0",
+    "eslint": "^3.0.1",
+    "eslint-config-airbnb-base": "^4.0.0",
+    "eslint-plugin-import": "^1.10.2",
     "node-sass": "^3.8.0",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",

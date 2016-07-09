@@ -1,13 +1,12 @@
 const menubar = require('menubar');
 const fs = require('fs');
-const S3Service = require('./S3Service');
 
 const mb = menubar({
   width: 400,
   height: 200,
 });
 
-let s3 = null;
+const s3 = null;
 
 const handleFiles = (files) => {
   if (s3 !== null) {
@@ -20,8 +19,8 @@ const handleFiles = (files) => {
   }
 };
 
-const setS3Context = (s3) => {
-  this.s3 = s3;
+const setS3Context = (newS3) => {
+  this.s3 = newS3;
 };
 
 mb.on('ready', () => {
@@ -29,5 +28,5 @@ mb.on('ready', () => {
 });
 
 module.exports = {
-  setS3Context
+  setS3Context,
 };

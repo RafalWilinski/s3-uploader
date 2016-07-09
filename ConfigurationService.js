@@ -24,27 +24,23 @@ const saveConfig = (accessKey, secretKey, bucket, ACL, storageClass, encryption)
     bucket,
     ACL,
     storageClass,
-    encryption
+    encryption,
   }, {}, (err) => {
-    if (err) console.error('Failed to save configuration.');
-    console.log('Configuration saved.');
+    if (err) throw new Error(err);
   });
 };
 
 const loadConfig = () => {
   fs.readFile(configFilePath, {}, (err, data) => {
     if (err) {
-      console.error(err);
+      throw new Error(err);
     } else {
       Object.assign(configuration, ...data);
-      console.log("New config: " + configuration);
     }
   });
 };
 
-const getItem = (key) => {
-  return configuration[key];
-};
+const getItem = (key) => configuration[key];
 
 module.exports = {
   getItem,
