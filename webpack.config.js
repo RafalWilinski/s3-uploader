@@ -7,6 +7,7 @@ module.exports = {
   output: {
     filename: 'public/bundle.js',
   },
+  target: 'electron',
   module: {
     loaders: [
       {
@@ -28,7 +29,7 @@ module.exports = {
   },
 
   watchOptions: {
-    poll: 1000,
+    poll: 100,
   },
   plugins: [
     new webpack.ExternalsPlugin('commonjs', [

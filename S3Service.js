@@ -1,4 +1,4 @@
-import 'aws-sdk/dist/aws-sdk';
+const AWS = require('aws-sdk');
 
 class S3Service {
   constructor(accessKey, secretKey) {
@@ -12,9 +12,6 @@ class S3Service {
       })
     });
 
-    // Remember credentials in persistent storage
-    window.localStorage.setItem('accessKey', accessKey);
-    window.localStorage.setItem('secretKey', secretKey);
     this.s3 = new AWS.S3();
   };
 
@@ -31,4 +28,4 @@ class S3Service {
   }
 }
 
-export default S3Service;
+module.exports = S3Service;

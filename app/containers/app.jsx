@@ -4,7 +4,7 @@ import BucketSelector from '../components/BucketSelector.jsx';
 import StatusMenu from '../components/StatusMenu.jsx';
 import SettingsMenu from '../components/SettingsMenu.jsx';
 
-import S3Service from '../S3Service';
+import IpcService from '../IpcService';
 
 import '../styles/main.scss';
 
@@ -15,7 +15,8 @@ class Application extends React.Component {
     this.state = {
       buckets: [],
       currentMenu: 'bucketSelect',
-      isLoggedIn: window.localStorage.getItem('isLogggedIn') || false,
+      isLoggedIn: false,
+      isLoading: false,
       loginError: {},
     };
 
@@ -24,15 +25,25 @@ class Application extends React.Component {
     this.bucketSelected = this._bucketSelected.bind(this);
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
     this.settingsSet = this._settingsSet.bind(this);
+    this.startLoading = this._startLoading.bind(this);
+    this.stopLoading = this._stopLoading.bind(this);
+  }
+
+  componentWillMount() {
+    if (window.localStorage.getItem('validCredentialsStored')) {
+      this.credentialsSubmitted(window.localStorage.getItem('accessKey'),
+        window.localStorage.getItem('secretKey'));
+    }
   }
 
   _bucketsLoaded(payload) {
-    window.localStorage.setItem('isLoggedIn', true);
+    window.localStorage.setItem('validCredentialsStored', true);
 
     this.setState({
       buckets: payload.Buckets,
       isLoggedIn: true,
       loginError: {},
+      isLoading: false,
     });
   }
 
@@ -45,14 +56,15 @@ class Application extends React.Component {
   }
 
   _credentialsSubmitted(accessKey, secretKey) {
-    const s3 = new S3Service(accessKey, secretKey);
+    this.startLoading();
 
-    s3.getBuckets().then((data) => {
+    IpcService.requestBuckets(accessKey, secretKey).then((data) => {
       this.bucketsLoaded(data);
     }).catch((loginError) => {
       this.setState({
         loginError,
         isLoggedIn: false,
+        isLoading: false,
       })
     });
   }
@@ -79,13 +91,27 @@ class Application extends React.Component {
     });
   }
 
+  _startLoading() {
+    this.setState({
+      isLoading: true
+    });
+  }
+
+  _stopLoading() {
+    this.setState({
+      isLoading: false
+    });
+  }
+
   render() {
     return (
       <div>
-        {!this.state.isLoggedIn
+        {!this.state.isLoading
+          ? !this.state.isLoggedIn
           ? <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
                         error={this.state.loginError}/>
           : this.getMenu()
+          : <div className="spin-box"></div>
         }
       </div>
     );

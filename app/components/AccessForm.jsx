@@ -9,7 +9,6 @@ class AccessForm extends React.Component {
     this.state = {
       accessKey: '',
       secretKey: '',
-      isLoading: false,
     };
 
     this.handleSubmit = this._handleSubmit.bind(this);
@@ -28,23 +27,13 @@ class AccessForm extends React.Component {
       secretKey: savedSecretKey,
     });
   }
-
-  componentWillReceiveProps() {
-    this.setState({
-      isLoading: false
-    })
-  }
-
+  
   _handleSubmit(event) {
     event.preventDefault();
     const accessKey = this.state.accessKey.trim();
     const secretKey = this.state.secretKey.trim();
 
     if (accessKey !== '' && secretKey !== '') {
-      this.setState({
-        isLoading: true,
-      });
-
       this.props.onCredentialsSubmitted(accessKey, secretKey);
     } else {
       if (accessKey === '') {
@@ -78,9 +67,7 @@ class AccessForm extends React.Component {
     return (
       <div className="access-form-container">
         <div>
-          { this.state.isLoading
-            ? <div className="spin-box"></div>
-            : <div>
+          <div>
             <p>In order to access S3, please provide AWS Access Key and Secret Key of user with
               sufficient permissions</p>
             <form onSubmit={this.handleSubmit}>
@@ -103,7 +90,6 @@ class AccessForm extends React.Component {
               />
             </form>
           </div>
-          }
           { this.props.error !== null
             ? <p>{this.props.error.message}</p> : ''
           }

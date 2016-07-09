@@ -32,7 +32,7 @@ class BucketSelector extends React.Component {
         <form>
           {this.props.buckets.map((bucket, index) =>
             <li key={index}>
-              <label for={index}>
+              <label htmlFor={index}>
                 <input onClick={(e) => this.changeDefault(bucket.Name)}
                        type="radio"
                        name="bucket"
