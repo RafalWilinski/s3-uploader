@@ -21,7 +21,7 @@ class Application extends React.Component {
 
     this.bucketsLoaded = this._bucketsLoaded.bind(this);
     this.getMenu = this._getMenu.bind(this);
-    this.onBucketSelected = this._onBucketSelected.bind(this);
+    this.bucketSelected = this._bucketSelected.bind(this);
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
   }
 
@@ -30,7 +30,8 @@ class Application extends React.Component {
 
     this.setState({
       buckets: payload.Buckets,
-      isLoggedIn: true
+      isLoggedIn: true,
+      loginError: {},
     });
   }
 
@@ -39,13 +40,10 @@ class Application extends React.Component {
 
     s3.getBuckets().then((data) => {
       this.bucketsLoaded(data);
-
-      this.setState({
-        loginError: {},
-      });
     }).catch((loginError) => {
       this.setState({
         loginError,
+        isLoggedIn: false,
       })
     });
   }
@@ -54,7 +52,7 @@ class Application extends React.Component {
     switch (this.state.currentMenu) {
       case 'bucketSelect':
         return <BucketSelector buckets={this.state.buckets}
-                               onBucketSelected={this.onBucketSelected}/>;
+                               onBucketSelected={this.bucketSelected}/>;
       case 'permissionsSelect':
         return <PermissionsDialog permissions={{}}/>;
       default:
@@ -62,7 +60,7 @@ class Application extends React.Component {
     }
   }
 
-  _onBucketSelected(bucketName) {
+  _bucketSelected(bucketName) {
     window.localStorage.setItem('default_bucket', bucketName);
 
     this.setState({
