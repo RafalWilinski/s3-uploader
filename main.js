@@ -1,38 +1,33 @@
 const menubar = require('menubar');
-const { ipcMain } = require('electron');
+const fs = require('fs');
 const S3Service = require('./S3Service');
 
-const asyncReply = 'asynchronous-reply';
-
-let s3 = null;
 const mb = menubar({
   width: 400,
   height: 200,
 });
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-  if (arg.action === 'GET_BUCKETS') {
-    s3 = new S3Service(arg.accessKey, arg.secretKey);
+let s3 = null;
 
-    s3.getBuckets().then((data) => {
-      event.sender.send(asyncReply, {
-        success: true,
-        data
-      });
-    }).catch((error) => {
-      event.sender.send(asyncReply, {
-        success: false,
-        error
+const handleFiles = (files) => {
+  if (s3 !== null) {
+    files.forEach((file) => {
+      fs.readFile(file, (err, data) => {
+        if (err) throw new Error(err);
+        s3.uploadFile(file.split('/').pop(), data);
       });
     });
   }
-});
+};
 
-const handleFiles = (files) => {
-
+const setS3Context = (s3) => {
+  this.s3 = s3;
 };
 
 mb.on('ready', () => {
-  mb.tray.on('drop-files', (files) => handleFiles(files));
+  mb.tray.on('drop-files', (event, files) => handleFiles(files));
 });
 
+module.exports = {
+  setS3Context
+};

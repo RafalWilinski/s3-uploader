@@ -3,7 +3,12 @@ import React from 'react';
 class StatusMenu extends React.Component {
   render() {
     return (<div>
-      <p>Ready</p>
+      <p>{this.props.status.name}</p>
+      {
+        this.props.status.name !== 'ready'
+        ? ''
+          : ''
+      }
     </div>);
   }
 }

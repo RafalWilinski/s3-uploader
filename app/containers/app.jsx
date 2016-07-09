@@ -3,8 +3,9 @@ import AccessForm from '../components/AccessForm.jsx';
 import BucketSelector from '../components/BucketSelector.jsx';
 import StatusMenu from '../components/StatusMenu.jsx';
 import SettingsMenu from '../components/SettingsMenu.jsx';
+const { ipcRenderer } = require('electron');
 
-import IpcService from '../IpcService';
+import IpcService from '../IpcRendererService';
 
 import '../styles/main.scss';
 
@@ -18,6 +19,9 @@ class Application extends React.Component {
       isLoggedIn: false,
       isLoading: false,
       loginError: {},
+      status: {
+        name: 'Ready',
+      }
     };
 
     this.bucketsLoaded = this._bucketsLoaded.bind(this);
@@ -26,19 +30,13 @@ class Application extends React.Component {
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
     this.settingsSet = this._settingsSet.bind(this);
     this.startLoading = this._startLoading.bind(this);
-    this.stopLoading = this._stopLoading.bind(this);
-  }
 
-  componentWillMount() {
-    if (window.localStorage.getItem('validCredentialsStored')) {
-      this.credentialsSubmitted(window.localStorage.getItem('accessKey'),
-        window.localStorage.getItem('secretKey'));
-    }
+    ipcRenderer.on('asynchronous-message', (event, arg) => {
+      console.log(arg);
+    });
   }
 
   _bucketsLoaded(payload) {
-    window.localStorage.setItem('validCredentialsStored', true);
-
     this.setState({
       buckets: payload.Buckets,
       isLoggedIn: true,
@@ -48,7 +46,7 @@ class Application extends React.Component {
   }
 
   _bucketSelected(bucketName) {
-    window.localStorage.setItem('default_bucket', bucketName);
+    window.localStorage.setItem('bucket', bucketName);
 
     this.setState({
       currentMenu: 'permissionsSelect'
@@ -77,13 +75,13 @@ class Application extends React.Component {
       case 'permissionsSelect':
         return <SettingsMenu onSettingsSelected={this.settingsSet}/>;
       default:
-        return <StatusMenu />;
+        return <StatusMenu status={this.state.status}/>;
     }
   }
 
   _settingsSet(settings) {
-    window.localStorage.setItem('storage', settings.storage);
-    window.localStorage.setItem('permission', settings.permission);
+    window.localStorage.setItem('storageClass', settings.storage);
+    window.localStorage.setItem('ACL', settings.permission);
     window.localStorage.setItem('encryption', settings.encryption);
 
     this.setState({
@@ -94,12 +92,6 @@ class Application extends React.Component {
   _startLoading() {
     this.setState({
       isLoading: true
-    });
-  }
-
-  _stopLoading() {
-    this.setState({
-      isLoading: false
     });
   }
 

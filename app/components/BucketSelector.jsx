@@ -5,7 +5,7 @@ class BucketSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: window.localStorage.getItem('default_bucket') || ''
+      current: window.localStorage.getItem('bucket') || ''
     };
 
     this.changeDefault = this._changeDefault.bind(this);
@@ -13,10 +13,12 @@ class BucketSelector extends React.Component {
 
   componentDidMount() {
     this.props.buckets.forEach((bucket, index) => {
-      if (bucket.Name === window.localStorage.getItem('default_bucket')) {
+      if (bucket.Name === window.localStorage.getItem('bucket')) {
         document.getElementById(index).checked = true;
       }
     });
+
+    this.changeDefault(window.localStorage.getItem('bucket'));
   }
 
   _changeDefault(current) {

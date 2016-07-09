@@ -30,8 +30,8 @@ class SettingsMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      storage: '',
-      permission: '',
+      storageClass: '',
+      ACL: '',
       encryption: '',
     };
 
@@ -40,15 +40,15 @@ class SettingsMenu extends React.Component {
     this.encryptionOptionChange = this._encryptionOptionChange.bind(this);
   }
 
-  _storageOptionChange(storage) {
+  _storageOptionChange(storageClass) {
     this.setState({
-      storage
+      storageClass
     });
   }
 
-  _permissionOptionChange(permission) {
+  _permissionOptionChange(ACL) {
     this.setState({
-      permission
+      ACL
     });
   }
 
