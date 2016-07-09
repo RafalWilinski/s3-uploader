@@ -1,5 +1,4 @@
 const menubar = require('menubar');
-const fs = require('fs');
 
 const mb = menubar({
   width: 400,
@@ -7,9 +6,7 @@ const mb = menubar({
 });
 
 const handleFiles = (files) => {
-  files.forEach((filePath) => {
 
-  });
 };
 
 mb.on('ready', () => {

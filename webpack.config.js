@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
   entry: [
     './app/index.jsx',
@@ -18,19 +20,30 @@ module.exports = {
         test: /\.scss?$/,
         exclude: /(node_modules)/,
         loader: 'style!css!sass',
-      }, {
-        test: /\.json$/,
-        loader: 'json'
-      },
+      }
     ],
     noParse: [
       /aws\-sdk/,
     ]
   },
-  node: {
-    fs: "empty"
-  },
+
   watchOptions: {
     poll: 1000,
   },
+  plugins: [
+    new webpack.ExternalsPlugin('commonjs', [
+      'desktop-capturer',
+      'electron-prebuilt',
+      'electron',
+      'ipc',
+      'ipc-renderer',
+      'native-image',
+      'remote',
+      'web-frame',
+      'clipboard',
+      'crash-reporter',
+      'screen',
+      'shell'
+    ])
+  ]
 };

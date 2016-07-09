@@ -2,7 +2,9 @@ import React from 'react';
 
 class StatusMenu extends React.Component {
   render() {
-    return (<div></div>);
+    return (<div>
+      <p>Ready</p>
+    </div>);
   }
 }
 

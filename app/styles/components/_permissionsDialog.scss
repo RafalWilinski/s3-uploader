@@ -1,0 +1,14 @@
+.permissions-dialog-container {
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+
+    p {
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+  }
+}

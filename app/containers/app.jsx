@@ -2,7 +2,7 @@ import React from 'react';
 import AccessForm from '../components/AccessForm.jsx';
 import BucketSelector from '../components/BucketSelector.jsx';
 import StatusMenu from '../components/StatusMenu.jsx';
-import PermissionsDialog from '../components/PermissionsDialog.jsx';
+import SettingsMenu from '../components/SettingsMenu.jsx';
 
 import S3Service from '../S3Service';
 
@@ -23,6 +23,7 @@ class Application extends React.Component {
     this.getMenu = this._getMenu.bind(this);
     this.bucketSelected = this._bucketSelected.bind(this);
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
+    this.settingsSet = this._settingsSet.bind(this);
   }
 
   _bucketsLoaded(payload) {
@@ -32,6 +33,14 @@ class Application extends React.Component {
       buckets: payload.Buckets,
       isLoggedIn: true,
       loginError: {},
+    });
+  }
+
+  _bucketSelected(bucketName) {
+    window.localStorage.setItem('default_bucket', bucketName);
+
+    this.setState({
+      currentMenu: 'permissionsSelect'
     });
   }
 
@@ -54,17 +63,19 @@ class Application extends React.Component {
         return <BucketSelector buckets={this.state.buckets}
                                onBucketSelected={this.bucketSelected}/>;
       case 'permissionsSelect':
-        return <PermissionsDialog permissions={{}}/>;
+        return <SettingsMenu onSettingsSelected={this.settingsSet}/>;
       default:
-        return <StatusMenu status={{}}/>;
+        return <StatusMenu />;
     }
   }
 
-  _bucketSelected(bucketName) {
-    window.localStorage.setItem('default_bucket', bucketName);
+  _settingsSet(settings) {
+    window.localStorage.setItem('storage', settings.storage);
+    window.localStorage.setItem('permission', settings.permission);
+    window.localStorage.setItem('encryption', settings.encryption);
 
     this.setState({
-      currentMenu: 'permissionsSelect'
+      currentMenu: 'ready'
     });
   }
 
