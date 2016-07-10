@@ -1,5 +1,4 @@
 const AWS = require('aws-sdk');
-const app = require('./main');
 const configService = require('./ConfigurationService');
 
 class S3Service {
@@ -24,7 +23,6 @@ class S3Service {
           return reject(err);
         }
 
-        app.setS3Context(this.s3);
         return resolve(data);
       });
     });

@@ -3,8 +3,6 @@ import AccessForm from '../components/AccessForm.jsx';
 import BucketSelector from '../components/BucketSelector.jsx';
 import StatusMenu from '../components/StatusMenu.jsx';
 import SettingsMenu from '../components/SettingsMenu.jsx';
-const { ipcRenderer } = require('electron');
-
 import IpcService from '../IpcRendererService';
 
 import '../styles/main.scss';
@@ -19,6 +17,9 @@ class Application extends React.Component {
       isLoggedIn: false,
       isLoading: false,
       loginError: {},
+      accessKey: '',
+      secretKey: '',
+      bucket: '',
       status: {
         name: 'Ready',
       }
@@ -30,10 +31,6 @@ class Application extends React.Component {
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
     this.settingsSet = this._settingsSet.bind(this);
     this.startLoading = this._startLoading.bind(this);
-
-    ipcRenderer.on('asynchronous-message', (event, arg) => {
-      console.log(arg);
-    });
   }
 
   _bucketsLoaded(payload) {
@@ -45,10 +42,11 @@ class Application extends React.Component {
     });
   }
 
-  _bucketSelected(bucketName) {
-    window.localStorage.setItem('bucket', bucketName);
+  _bucketSelected(bucket) {
+    window.localStorage.setItem('bucket', bucket);
 
     this.setState({
+      bucket,
       currentMenu: 'permissionsSelect'
     });
   }
@@ -56,15 +54,17 @@ class Application extends React.Component {
   _credentialsSubmitted(accessKey, secretKey) {
     this.startLoading();
 
-    IpcService.requestBuckets(accessKey, secretKey).then((data) => {
-      this.bucketsLoaded(data);
-    }).catch((loginError) => {
-      this.setState({
-        loginError,
-        isLoggedIn: false,
-        isLoading: false,
+    IpcService.requestBuckets(accessKey, secretKey)
+      .then((data) => {
+        this.bucketsLoaded(data);
       })
-    });
+      .catch((loginError) => {
+        this.setState({
+          loginError,
+          isLoggedIn: false,
+          isLoading: false,
+        })
+      });
   }
 
   _getMenu() {
@@ -80,12 +80,21 @@ class Application extends React.Component {
   }
 
   _settingsSet(settings) {
-    window.localStorage.setItem('storageClass', settings.storage);
-    window.localStorage.setItem('ACL', settings.permission);
+    window.localStorage.setItem('storageClass', settings.storageClass);
+    window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
 
+    IpcService.saveConfig({
+      ACL: settings.ACL,
+      storageClass: settings.storageClass,
+      encryption: settings.encryption,
+      accessKey: this.state.accessKey,
+      secretKey: this.state.secretKey,
+      bucket: this.state.bucket
+    });
+
     this.setState({
-      currentMenu: 'ready'
+      currentMenu: 'ready',
     });
   }
 

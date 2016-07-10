@@ -1,12 +1,16 @@
 const menubar = require('menubar');
 const fs = require('fs');
+const configService = require('./ConfigurationService');
+const { ipcMain } = require('electron');
+const S3Service = require('./S3Service');
 
 const mb = menubar({
   width: 400,
   height: 200,
 });
 
-const s3 = null;
+let s3 = null;
+const asyncReply = 'asynchronous-reply';
 
 const handleFiles = (files) => {
   if (s3 !== null) {
@@ -19,14 +23,37 @@ const handleFiles = (files) => {
   }
 };
 
-const setS3Context = (newS3) => {
-  this.s3 = newS3;
-};
-
 mb.on('ready', () => {
   mb.tray.on('drop-files', (event, files) => handleFiles(files));
 });
 
-module.exports = {
-  setS3Context,
-};
+ipcMain.on('asynchronous-message', (event, arg) => {
+  switch (arg.action) {
+    case 'GET_BUCKETS':
+      s3 = new S3Service(arg.accessKey, arg.secretKey);
+
+      s3.getBuckets().then((data) => {
+        event.sender.send(asyncReply, {
+          success: true,
+          data,
+        });
+      }).catch((error) => {
+        event.sender.send(asyncReply, {
+          success: false,
+          error,
+        });
+      });
+      break;
+    case 'SAVE_CONFIG':
+      configService.saveConfig(
+        arg.accessKey,
+        arg.secretKey,
+        arg.bucket,
+        arg.ACL,
+        arg.storageClass,
+        arg.encryption);
+      break;
+    default:
+      throw new Error('Unsupported IPC action');
+  }
+});

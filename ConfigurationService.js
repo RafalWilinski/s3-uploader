@@ -18,14 +18,14 @@ const saveConfig = (accessKey, secretKey, bucket, ACL, storageClass, encryption)
   configuration.storageClass = storageClass;
   configuration.encryption = encryption;
 
-  fs.writeFile(configFilePath, {
+  fs.writeFile(configFilePath, JSON.stringify({
     accessKey,
     secretKey,
     bucket,
     ACL,
     storageClass,
     encryption,
-  }, {}, (err) => {
+  }), {}, (err) => {
     if (err) throw new Error(err);
   });
 };
