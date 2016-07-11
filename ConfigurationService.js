@@ -18,15 +18,16 @@ const updateConfig = (newConfig) => {
   });
 };
 
-const loadConfig = () => {
-  fs.readFile(configFilePath, {}, (err, data) => {
+const loadConfig = () => new Promise((resolve, reject) => {
+  fs.readFile(configFilePath, 'utf-8', (err, data) => {
     if (err) {
-      throw new Error(err);
-    } else {
-      Object.assign(configuration, ...data);
+      return reject(err);
     }
+
+    Object.assign(configuration, JSON.parse(data));
+    return resolve(configuration);
   });
-};
+});
 
 const getItem = (key) => configuration[key];
 

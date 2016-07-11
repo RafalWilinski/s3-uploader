@@ -21,7 +21,7 @@ const requestBuckets = (accessKey, secretKey) => new Promise((resolve, reject) =
 
 const saveConfig = (config) => new Promise((resolve, reject) => {
   const data = Object.assign(config, {
-    action: ACTION_UPDATE_CONFIG
+    action: ACTION_UPDATE_CONFIG,
   });
 
   ipcRenderer.send(ASYNC_MESSAGE, data);

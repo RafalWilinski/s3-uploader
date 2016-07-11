@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const EventEmitter = require('events');
 const configService = require('./ConfigurationService');
 
 class S3Service {
@@ -29,15 +30,22 @@ class S3Service {
   }
 
   uploadFile(fileName, data) {
+    const uploadEventEmitter = new EventEmitter();
+
     this.s3.upload({
       Body: data,
       ACL: configService.getItem('ACL'),
       Key: fileName,
       StorageClass: configService.getItem('storageClass'),
       Bucket: configService.getItem('bucket'),
-    }, (err) => {
-      if (err) throw new Error(err);
+    }, (err, payload) => {
+      if (err) uploadEventEmitter.emit('error', err);
+      uploadEventEmitter.emit('success', payload);
+    }).on('httpUploadProgress', (progress) => {
+      uploadEventEmitter.emit('progress', progress);
     });
+
+    return uploadEventEmitter;
   }
 }
 
