@@ -23,7 +23,6 @@ class S3Service {
         if (err) {
           return reject(err);
         }
-
         return resolve(data);
       });
     });

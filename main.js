@@ -1,6 +1,6 @@
 const menubar = require('menubar');
 const fs = require('fs');
-const { ipcMain } = require('electron');
+const {ipcMain} = require('electron');
 const configService = require('./ConfigurationService');
 const S3Service = require('./S3Service');
 
@@ -9,17 +9,34 @@ const mb = menubar({
   height: 200,
 });
 
-const ASYNC_REPLY = 'asynchronous-reply';
-const ASYNC_MESSAGE = 'asynchronous-message';
-
 let s3 = null;
+
+const handleUpload = (uploadEventEmitter) => {
+  uploadEventEmitter.on('error', (error) => {
+    mb.window.webContents.send('UPLOAD_ERROR', {
+      error,
+    });
+  });
+
+  uploadEventEmitter.on('progress', (data) => {
+    mb.window.webContents.send('UPLOAD_PROGRESS', {
+      data,
+    });
+  });
+
+  uploadEventEmitter.on('success', (data) => {
+    mb.window.webContents.send('UPLOAD_SUCCESS', {
+      data,
+    });
+  });
+};
 
 const handleFiles = (files) => {
   if (s3 !== null) {
     files.forEach((file) => {
       fs.readFile(file, (err, data) => {
         if (err) throw new Error(err);
-        s3.uploadFile(file.split('/').pop(), data);
+        handleUpload(s3.uploadFile(file.split('/').pop(), data));
       });
     });
   } else {
@@ -42,33 +59,24 @@ mb.on('ready', () => {
   mb.tray.on('drop-files', (event, files) => handleFiles(files));
 });
 
-ipcMain.on(ASYNC_MESSAGE, (event, arg) => {
-  switch (arg.action) {
-    case 'GET_BUCKETS':
-      s3 = new S3Service(arg.accessKey, arg.secretKey);
+ipcMain.on('GET_BUCKETS', (event, arg) => {
+  s3 = new S3Service(arg.accessKey, arg.secretKey);
 
-      s3.getBuckets().then((data) => {
-        event.sender.send(ASYNC_REPLY, {
-          success: true,
-          data,
-        });
+  s3.getBuckets().then((data) => {
+    event.sender.send('GET_BUCKETS_REPLY', {
+      success: true,
+      data,
+    });
 
-        arg.action = undefined;
-        configService.updateConfig(arg);
-      }).catch((error) => {
-        event.sender.send(asyncReply, {
-          success: false,
-          error,
-        });
-      });
-      break;
-    case 'UPDATE_CONFIG':
-      // Delete action property for serialization needs
-      arg.action = undefined;
+    configService.updateConfig(arg);
+  }).catch((error) => {
+    event.sender.send('GET_BUCKETS_REPLY', {
+      success: false,
+      error,
+    });
+  });
+});
 
-      configService.updateConfig(arg);
-      break;
-    default:
-      throw new Error('Unsupported IPC action');
-  }
+ipcMain.on('UPDATE_CONFIG', (event, arg) => {
+  configService.updateConfig(arg);
 });
