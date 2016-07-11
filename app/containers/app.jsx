@@ -17,8 +17,6 @@ class Application extends React.Component {
       isLoggedIn: false,
       isLoading: false,
       loginError: {},
-      accessKey: '',
-      secretKey: '',
       bucket: '',
       status: {
         name: 'Ready',
@@ -71,7 +69,7 @@ class Application extends React.Component {
     switch (this.state.currentMenu) {
       case 'bucketSelect':
         return <BucketSelector buckets={this.state.buckets}
-                               onBucketSelected={this.bucketSelected}/>;
+          onBucketSelected={this.bucketSelected}/>;
       case 'permissionsSelect':
         return <SettingsMenu onSettingsSelected={this.settingsSet}/>;
       default:
@@ -84,12 +82,12 @@ class Application extends React.Component {
     window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
 
+    console.log(settings);
+
     IpcService.saveConfig({
       ACL: settings.ACL,
       storageClass: settings.storageClass,
       encryption: settings.encryption,
-      accessKey: this.state.accessKey,
-      secretKey: this.state.secretKey,
       bucket: this.state.bucket
     });
 
@@ -109,9 +107,10 @@ class Application extends React.Component {
       <div>
         {!this.state.isLoading
           ? !this.state.isLoggedIn
-          ? <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
-                        error={this.state.loginError}/>
-          : this.getMenu()
+            ? <AccessForm
+              onCredentialsSubmitted={this.credentialsSubmitted}
+              error={this.state.loginError}/>
+            : this.getMenu()
           : <div className="spin-box"></div>
         }
       </div>

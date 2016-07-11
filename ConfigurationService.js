@@ -10,22 +10,10 @@ const configuration = {
   encryption: false,
 };
 
-const saveConfig = (accessKey, secretKey, bucket, ACL, storageClass, encryption) => {
-  configuration.accessKey = accessKey;
-  configuration.secretKey = secretKey;
-  configuration.bucket = bucket;
-  configuration.ACL = ACL;
-  configuration.storageClass = storageClass;
-  configuration.encryption = encryption;
+const updateConfig = (newConfig) => {
+  Object.assign(configuration, newConfig);
 
-  fs.writeFile(configFilePath, JSON.stringify({
-    accessKey,
-    secretKey,
-    bucket,
-    ACL,
-    storageClass,
-    encryption,
-  }), {}, (err) => {
+  fs.writeFile(configFilePath, JSON.stringify(configuration), {}, (err) => {
     if (err) throw new Error(err);
   });
 };
@@ -44,6 +32,6 @@ const getItem = (key) => configuration[key];
 
 module.exports = {
   getItem,
-  saveConfig,
+  updateConfig,
   loadConfig,
 };

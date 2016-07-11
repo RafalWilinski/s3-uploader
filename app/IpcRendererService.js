@@ -4,7 +4,7 @@ const ASYNC_MESSAGE = 'asynchronous-message';
 const ASYNC_REPLY = 'asynchronous-reply';
 
 const ACTION_GET_BUCKETS = 'GET_BUCKETS';
-const ACTION_SAVE_CONFIG = 'SAVE_CONFIG';
+const ACTION_UPDATE_CONFIG = 'UPDATE_CONFIG';
 
 const requestBuckets = (accessKey, secretKey) => new Promise((resolve, reject) => {
   ipcRenderer.send(ASYNC_MESSAGE, {
@@ -20,10 +20,11 @@ const requestBuckets = (accessKey, secretKey) => new Promise((resolve, reject) =
 });
 
 const saveConfig = (config) => new Promise((resolve, reject) => {
-  ipcRenderer.send(ASYNC_MESSAGE, {
-    action: ACTION_SAVE_CONFIG,
-    ACL: config.acl,
+  const data = Object.assign(config, {
+    action: ACTION_UPDATE_CONFIG
   });
+
+  ipcRenderer.send(ASYNC_MESSAGE, data);
 
   ipcRenderer.on(ASYNC_REPLY, (event, arg) => {
     if (arg.success) return resolve(arg);

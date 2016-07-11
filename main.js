@@ -24,10 +24,13 @@ const handleFiles = (files) => {
 };
 
 mb.on('ready', () => {
+  configService.loadConfig();
+  
   mb.tray.on('drop-files', (event, files) => handleFiles(files));
 });
 
 ipcMain.on('asynchronous-message', (event, arg) => {
+  console.log(arg);
   switch (arg.action) {
     case 'GET_BUCKETS':
       s3 = new S3Service(arg.accessKey, arg.secretKey);
@@ -37,6 +40,9 @@ ipcMain.on('asynchronous-message', (event, arg) => {
           success: true,
           data,
         });
+
+        arg.action = undefined;
+        configService.updateConfig(arg);
       }).catch((error) => {
         event.sender.send(asyncReply, {
           success: false,
@@ -44,14 +50,11 @@ ipcMain.on('asynchronous-message', (event, arg) => {
         });
       });
       break;
-    case 'SAVE_CONFIG':
-      configService.saveConfig(
-        arg.accessKey,
-        arg.secretKey,
-        arg.bucket,
-        arg.ACL,
-        arg.storageClass,
-        arg.encryption);
+    case 'UPDATE_CONFIG':
+      // Delete action property for serialization needs
+      arg.action = undefined;
+      
+      configService.updateConfig(arg);
       break;
     default:
       throw new Error('Unsupported IPC action');
