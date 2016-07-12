@@ -1,8 +1,9 @@
 const menubar = require('menubar');
 const fs = require('fs');
-const {ipcMain} = require('electron');
+const { ipcMain, clipboard } = require('electron');
 const configService = require('./ConfigurationService');
 const S3Service = require('./S3Service');
+const notifier = require('node-notifier');
 
 const mb = menubar({
   width: 400,
@@ -13,6 +14,11 @@ let s3 = null;
 
 const handleUpload = (uploadEventEmitter) => {
   uploadEventEmitter.on('error', (error) => {
+    notifier.notify({
+      title: 'Upload Error!',
+      message: 'Click icon to see more details...',
+    });
+
     mb.window.webContents.send('UPLOAD_ERROR', {
       error,
     });
@@ -25,8 +31,11 @@ const handleUpload = (uploadEventEmitter) => {
   });
 
   uploadEventEmitter.on('success', (data) => {
-    mb.window.webContents.send('UPLOAD_SUCCESS', {
-      data,
+    clipboard.writeText(data.Location);
+
+    notifier.notify({
+      title: 'File uploaded!',
+      message: 'Link has been saved to clipboard',
     });
   });
 };
