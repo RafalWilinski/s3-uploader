@@ -24,11 +24,22 @@ class Application extends React.Component {
     };
 
     this.bucketsLoaded = this._bucketsLoaded.bind(this);
-    this.getMenu = this._getMenu.bind(this);
     this.bucketSelected = this._bucketSelected.bind(this);
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
+    this.getMenu = this._getMenu.bind(this);
     this.settingsSet = this._settingsSet.bind(this);
     this.startLoading = this._startLoading.bind(this);
+    this.uploadStarted = this._uploadStarted.bind(this);
+    this.uploadFailed = this._uploadFailed.bind(this);
+    this.uploadSucceeded = this._uploadSucceeded.bind(this);
+    this.uploadProgressed = this._uploadProgressed.bind(this);
+
+    IpcService.listenForUploadEvents(
+      this.uploadFailed,
+      this.uploadSucceeded,
+      this.uploadProgressed,
+      this.uploadStarted
+    );
   }
 
   _bucketsLoaded(payload) {
@@ -82,8 +93,6 @@ class Application extends React.Component {
     window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
 
-    console.log(settings);
-
     IpcService.saveConfig({
       ACL: settings.ACL,
       storageClass: settings.storageClass,
@@ -99,6 +108,38 @@ class Application extends React.Component {
   _startLoading() {
     this.setState({
       isLoading: true
+    });
+  }
+
+  _uploadStarted() {
+    this.setState({
+      status: {
+        name: 'Uploading...',
+      }
+    });
+  }
+
+  _uploadFailed(error) {
+    this.setState({
+      status: {
+        name: 'Ready',
+      }
+    });
+  }
+
+  _uploadSucceeded(data) {
+    this.setState({
+      status: {
+        name: 'Ready',
+      }
+    });
+  }
+
+  _uploadProgressed(progress) {
+    this.setState({
+      status: {
+        name: 'Uploading...',
+      }
     });
   }
 

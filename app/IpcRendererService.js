@@ -16,7 +16,26 @@ const saveConfig = (config) => {
   ipcRenderer.send('UPDATE_CONFIG', config);
 };
 
+const listenForUploadEvents = (errorCallback, successCallback, progressCallback, startCallback) => {
+  ipcRenderer.on('UPLOAD_SUCCESS', (event, arg) => {
+    successCallback(arg);
+  });
+
+  ipcRenderer.on('UPLOAD_ERROR', (event, arg) => {
+    errorCallback(arg);
+  });
+
+  ipcRenderer.on('UPLOAD_PROGRESS', (event, arg) => {
+    progressCallback(arg);
+  });
+
+  ipcRenderer.on('UPLOAD_START', (event, arg) => {
+    startCallback(arg);
+  });
+};
+
 module.exports = {
+  listenForUploadEvents,
   requestBuckets,
   saveConfig,
 };

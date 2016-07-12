@@ -1,9 +1,9 @@
 const menubar = require('menubar');
 const fs = require('fs');
+const notifier = require('node-notifier');
 const { ipcMain, clipboard } = require('electron');
 const configService = require('./ConfigurationService');
 const S3Service = require('./S3Service');
-const notifier = require('node-notifier');
 
 const mb = menubar({
   width: 400,
@@ -12,31 +12,40 @@ const mb = menubar({
 
 let s3 = null;
 
-const handleUpload = (uploadEventEmitter) => {
-  uploadEventEmitter.on('error', (error) => {
-    notifier.notify({
-      title: 'Upload Error!',
-      message: 'Click icon to see more details...',
+const sendWebContentsMessage = (thread, data) => {
+  if (mb.window !== undefined) {
+    mb.window.webContents.send(thread, {
+      data,
     });
+  } else {
+    console.warn('mb.window is not defined, sending message ignored...');
+  }
+};
 
-    mb.window.webContents.send('UPLOAD_ERROR', {
-      error,
-    });
+const sendNotification = (title, message) => {
+  notifier.notify({
+    title,
+    message,
+  });
+};
+
+const handleUpload = (uploadEventEmitter) => {
+  sendWebContentsMessage('UPLOAD_START');
+
+  uploadEventEmitter.on('error', (error) => {
+    sendNotification('Upload Error!', 'Click icon for more details...');
+    sendWebContentsMessage('UPLOAD_ERROR', error);
   });
 
   uploadEventEmitter.on('progress', (data) => {
-    mb.window.webContents.send('UPLOAD_PROGRESS', {
-      data,
-    });
+    sendWebContentsMessage('UPLOAD_PROGRESS', data);
   });
 
   uploadEventEmitter.on('success', (data) => {
     clipboard.writeText(data.Location);
 
-    notifier.notify({
-      title: 'File uploaded!',
-      message: 'Link has been saved to clipboard',
-    });
+    sendNotification('File Uploaded!', 'Link has been copied to clipboard');
+    sendWebContentsMessage('UPLOAD_SUCCESS', data);
   });
 };
 
