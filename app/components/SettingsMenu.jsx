@@ -2,13 +2,13 @@ import React from 'react';
 
 const storageOptions = [
   {
-    displayName: 'Standard Storage',
+    displayName: 'Standard',
     id: 'STANDARD',
   }, {
-    displayName: 'Reduced Redundancy Storage',
+    displayName: 'Reduced Redundancy',
     id: 'REDUCED_REDUNDANCY',
   }, {
-    displayName: 'Infrequent Access Storage',
+    displayName: 'Infrequent Access',
     id: 'STANDARD_IA',
   },
 ];
@@ -33,22 +33,41 @@ class SettingsMenu extends React.Component {
       storageClass: '',
       ACL: '',
       encryption: '',
+      bucket: '',
     };
 
     this.storageOptionChange = this._storageOptionChange.bind(this);
     this.permissionOptionChange = this._permissionOptionChange.bind(this);
     this.encryptionOptionChange = this._encryptionOptionChange.bind(this);
+    this.changeDefault = this._changeDefault.bind(this);
+    this.checkSelection = this._checkSelection.bind(this);
   }
 
-  _storageOptionChange(storageClass) {
+  _changeDefault(bucket) {
     this.setState({
-      storageClass
+      bucket,
     });
   }
 
-  _permissionOptionChange(ACL) {
+  _checkSelection(item, selection, defaultClasses = '') {
+    if(item === selection) {
+      return 'selected ' + defaultClasses;
+    } else {
+      return defaultClasses;
+    }
+  }
+
+  _storageOptionChange(e, storageClass) {
+    e.preventDefault();
     this.setState({
-      ACL
+      storageClass,
+    });
+  }
+
+  _permissionOptionChange(e, ACL) {
+    e.preventDefault();
+    this.setState({
+      ACL,
     });
   }
 
@@ -61,38 +80,51 @@ class SettingsMenu extends React.Component {
   render() {
     return (
       <div className="permissions-dialog-container">
-        <form>
-          <p>Storage Class</p>
-          {
-            storageOptions.map((option, index) =>
-              <label key={index}>
-                <input type="radio" name="storage"
-                       onClick={(e) => this.storageOptionChange(option.id)}/>
-                {option.displayName}
-              </label>)
-          }
-        </form>
-        <form>
-          <label>
-            <input type="checkbox" name="encryption"
-                   onClick={(e) => this.encryptionOptionChange(e)}/>
-            Use Server Side Encryption
-          </label>
-        </form>
-        <form>
-          <p>Default Permissions</p>
-          {
-            permissionsOptions.map((option, index) =>
-              <label key={index}>
-                <input type="radio" name="permissions"
-                       onClick={(e) => this.permissionOptionChange(option.id)}/>
-                {option.displayName}
-              </label>)
-          }
-        </form>
-        <button onClick={(e) => this.props.onSettingsSelected(this.state)}>
-          Confirm
-        </button>
+        <div className="left column">
+          <ul>
+            {this.props.buckets.map((bucket, index) =>
+              <li key={index}>
+                <div onClick={(e) => this.changeDefault(bucket.Name)} id={index}>
+                  <span className={this.checkSelection(bucket.Name, this.state.bucket)}>
+                    {bucket.Name}
+                  </span>
+                </div>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        <div className="right column">
+          <form>
+            <p className="form-head">Storage Class</p>
+            {
+              storageOptions.map((option, index) =>
+                <button type="radio" name="storage"
+                        onClick={(e) => this.storageOptionChange(e, option.id)} key={index}>
+                  <span className={this.checkSelection(option.id, this.state.storageClass, 'white big')}>
+                    {option.displayName}
+                  </span>
+                </button>
+              )
+            }
+          </form>
+          <form>
+            <p className="form-head">Default Permissions</p>
+            {
+              permissionsOptions.map((option, index) =>
+                <button type="radio" name="permissions"
+                        onClick={(e) => this.permissionOptionChange(e, option.id)} key={index}>
+                  <span className={this.checkSelection(option.id, this.state.ACL, 'white big')}>
+                    {option.displayName}
+                  </span>
+                </button>
+              )
+            }
+          </form>
+          <button onClick={(e) => this.props.onSettingsSelected(this.state)}>
+            Confirm
+          </button>
+        </div>
       </div>
     );
   }
@@ -100,6 +132,7 @@ class SettingsMenu extends React.Component {
 
 SettingsMenu.propTypes = {
   onSettingsSelected: React.PropTypes.func.isRequired,
+  buckets: React.PropTypes.array.isRequired,
 };
 
 export default SettingsMenu;

@@ -7,7 +7,7 @@ const S3Service = require('./S3Service');
 
 const mb = menubar({
   width: 400,
-  height: 200,
+  height: 300,
 });
 
 let s3 = null;

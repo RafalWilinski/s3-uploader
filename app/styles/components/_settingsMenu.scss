@@ -1,0 +1,58 @@
+@import '../base/_main';
+
+.permissions-dialog-container {
+  display: flex;
+  flex-direction: row;
+
+  .column {
+    width: 50%;
+    height: 100vh;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left {
+    background: #F5F5F5;
+  }
+
+  .selected {
+    text-decoration: underline;
+  }
+
+  .right {
+    background-color: $green-color;
+  }
+
+  form {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+
+    p {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      font-size: 9px;
+      color: #FFFFFF;
+    }
+  }
+
+  .form-head {
+    opacity: 0.7;
+  }
+
+  ul {
+    padding: 0;
+    margin: auto;
+  }
+
+  li {
+    list-style: none;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}

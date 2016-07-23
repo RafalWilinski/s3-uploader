@@ -1,6 +1,5 @@
 import React from 'react';
 import AccessForm from '../components/AccessForm.jsx';
-import BucketSelector from '../components/BucketSelector.jsx';
 import StatusMenu from '../components/StatusMenu.jsx';
 import SettingsMenu from '../components/SettingsMenu.jsx';
 import IpcService from '../IpcRendererService';
@@ -13,9 +12,9 @@ class Application extends React.Component {
 
     this.state = {
       buckets: [],
-      currentMenu: 'bucketSelect',
       isLoggedIn: false,
       isLoading: false,
+      isSettingsSet: false,
       loginError: {},
       bucket: '',
       status: {
@@ -24,7 +23,6 @@ class Application extends React.Component {
     };
 
     this.bucketsLoaded = this._bucketsLoaded.bind(this);
-    this.bucketSelected = this._bucketSelected.bind(this);
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
     this.getMenu = this._getMenu.bind(this);
     this.settingsSet = this._settingsSet.bind(this);
@@ -51,15 +49,6 @@ class Application extends React.Component {
     });
   }
 
-  _bucketSelected(bucket) {
-    window.localStorage.setItem('bucket', bucket);
-
-    this.setState({
-      bucket,
-      currentMenu: 'permissionsSelect'
-    });
-  }
-
   _credentialsSubmitted(accessKey, secretKey) {
     this.startLoading();
 
@@ -77,14 +66,19 @@ class Application extends React.Component {
   }
 
   _getMenu() {
-    switch (this.state.currentMenu) {
-      case 'bucketSelect':
-        return <BucketSelector buckets={this.state.buckets}
-          onBucketSelected={this.bucketSelected}/>;
-      case 'permissionsSelect':
-        return <SettingsMenu onSettingsSelected={this.settingsSet}/>;
-      default:
-        return <StatusMenu status={this.state.status}/>;
+    if (this.state.isLoading) {
+      return <div className="spin-box"></div>;
+    }
+
+    if (this.state.isLoggedIn) {
+      if (this.state.isSettingsSet) {
+        return <StatusMenu status={this.state.status} />;
+      } else {
+        return <SettingsMenu onSettingsSelected={this.settingsSet} buckets={this.state.buckets} />;
+      }
+    } else {
+      return <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
+                         error={this.state.loginError} />
     }
   }
 
@@ -92,16 +86,18 @@ class Application extends React.Component {
     window.localStorage.setItem('storageClass', settings.storageClass);
     window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
+    window.localStorage.setItem('bucket', settings.bucket);
 
     IpcService.saveConfig({
       ACL: settings.ACL,
       storageClass: settings.storageClass,
       encryption: settings.encryption,
-      bucket: this.state.bucket
+      bucket: settings.bucket,
     });
 
     this.setState({
-      currentMenu: 'ready',
+      bucket: settings.bucket,
+      isSettingsSet: true,
     });
   }
 
@@ -146,14 +142,7 @@ class Application extends React.Component {
   render() {
     return (
       <div>
-        {!this.state.isLoading
-          ? !this.state.isLoggedIn
-            ? <AccessForm
-              onCredentialsSubmitted={this.credentialsSubmitted}
-              error={this.state.loginError}/>
-            : this.getMenu()
-          : <div className="spin-box"></div>
-        }
+        {this.getMenu()}
       </div>
     );
   }

@@ -1,14 +1,37 @@
+$white-color: #EAEAEA;
+$grey-color: #b4b4b4;
+$black-color: #424242;
+$green-color: #2dc83a;
+
 html {
+  overflow-x: hidden;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
 }
 
 html, body, #app {
-  height: 90vh;
+  height: 100%;
+  margin: 0;
+}
+
+button {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 1.2em;
+  font-weight: 400;
 }
 
 ::-webkit-scrollbar {
-  width: 0;
   background: transparent;
+  width: 0;
+}
+
+*:focus {
+  outline: none;
+}
+
+.white {
+  color: $white-color;
 }
