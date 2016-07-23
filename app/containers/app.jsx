@@ -17,9 +17,9 @@ class Application extends React.Component {
       isSettingsSet: false,
       loginError: {},
       bucket: '',
-      status: {
-        name: 'Ready',
-      }
+      ACL: '',
+      region: '',
+      status: 'Ready',
     };
 
     this.bucketsLoaded = this._bucketsLoaded.bind(this);
@@ -72,9 +72,10 @@ class Application extends React.Component {
 
     if (this.state.isLoggedIn) {
       if (this.state.isSettingsSet) {
-        return <StatusMenu status={this.state.status} />;
+        return <StatusMenu status={this.state.status} bucket={this.state.bucket} ACL={this.state.ACL} region={this.state.region}/>;
       } else {
-        return <SettingsMenu onSettingsSelected={this.settingsSet} buckets={this.state.buckets} />;
+        return <SettingsMenu onSettingsSelected={this.settingsSet} buckets={this.state.buckets}
+                             ACL={this.state.ACL} />;
       }
     } else {
       return <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
@@ -87,16 +88,20 @@ class Application extends React.Component {
     window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
     window.localStorage.setItem('bucket', settings.bucket);
+    window.localStorage.setItem('region', settings.region);
 
     IpcService.saveConfig({
       ACL: settings.ACL,
       storageClass: settings.storageClass,
       encryption: settings.encryption,
       bucket: settings.bucket,
+      region: settings.region,
     });
 
     this.setState({
+      ACL: settings.ACL,
       bucket: settings.bucket,
+      region: settings.region,
       isSettingsSet: true,
     });
   }
@@ -109,33 +114,26 @@ class Application extends React.Component {
 
   _uploadStarted() {
     this.setState({
-      status: {
-        name: 'Uploading...',
-      }
+      status: 'Uploading...',
     });
   }
 
   _uploadFailed(error) {
     this.setState({
-      status: {
-        name: 'Ready',
-      }
+      status: 'Ready',
     });
   }
 
   _uploadSucceeded(data) {
     this.setState({
-      status: {
-        name: 'Ready',
-      }
+      status: 'Ready',
     });
   }
 
   _uploadProgressed(progress) {
+    console.log(process);
     this.setState({
-      status: {
-        name: 'Uploading...',
-      }
+      status: 'Uploading...',
     });
   }
 

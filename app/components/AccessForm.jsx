@@ -73,7 +73,7 @@ class AccessForm extends React.Component {
       <div className="access-form-container">
         <div>
           <div>
-            <p>In order to access S3, please provide AWS Access Key and Secret Key of user with
+            <p className="extra-margin">In order to access S3, please provide AWS Access Key and Secret Key of user with
               sufficient permissions</p>
             <form onSubmit={this.handleSubmit}>
               <input type="text"
