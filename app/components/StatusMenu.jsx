@@ -3,26 +3,24 @@ import React from 'react';
 class StatusMenu extends React.Component {
 
   getMenu() {
-    if (this.props.status === 'Ready') {
-      return (
+    return (
+      <div>
         <div>
           <p>Bucket Selected: {this.props.bucket}</p>
           <p>Permissions: {this.props.ACL}</p>
         </div>
-      );
-    } else {
-      return (
         <div>
           {
-            this.props.files.map((file) =>
-              <div>
-                <p>{file.name}</p>
-                <button onClick={file.abortFunction}>Abort</button>
+            this.props.files.map((file, index) =>
+              <div key={index}>
+                <p>{file.key}</p>
+                <span>{file.status}</span>
+                <button>Abort</button>
               </div>)
           }
         </div>
-      );
-    }
+      </div>
+    );
   }
 
   render() {
@@ -40,8 +38,7 @@ StatusMenu.propTypes = {
   bucket: React.PropTypes.string.isRequired,
   status: React.PropTypes.string.isRequired,
   files: React.PropTypes.arrayOf(React.PropTypes.shape({
-    name: React.PropTypes.string.isRequired,
-    abortFunction:  React.PropTypes.func.isRequired,
+    key: React.PropTypes.string.isRequired,
   }).isRequired).isRequired,
 };
 

@@ -11,13 +11,14 @@ class Application extends React.Component {
     super(props);
 
     this.state = {
+      ACL: '',
+      bucket: '',
       buckets: [],
+      files: [],
+      loginError: {},
       isLoggedIn: false,
       isLoading: false,
       isSettingsSet: false,
-      loginError: {},
-      bucket: '',
-      ACL: '',
       region: '',
       status: 'Ready',
     };
@@ -66,20 +67,26 @@ class Application extends React.Component {
   }
 
   _getMenu() {
+    console.log("Files: " + JSON.stringify(this.state.files));
     if (this.state.isLoading) {
       return <div className="spin-box"></div>;
     }
 
     if (this.state.isLoggedIn) {
       if (this.state.isSettingsSet) {
-        return <StatusMenu status={this.state.status} bucket={this.state.bucket} ACL={this.state.ACL} region={this.state.region}/>;
+        return <StatusMenu status={this.state.status}
+                           bucket={this.state.bucket}
+                           ACL={this.state.ACL}
+                           region={this.state.region}
+                           files={this.state.files}/>;
       } else {
-        return <SettingsMenu onSettingsSelected={this.settingsSet} buckets={this.state.buckets}
-                             ACL={this.state.ACL} />;
+        return <SettingsMenu onSettingsSelected={this.settingsSet}
+                             buckets={this.state.buckets}
+                             ACL={this.state.ACL}/>;
       }
     } else {
       return <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
-                         error={this.state.loginError} />
+                         error={this.state.loginError}/>
     }
   }
 
@@ -112,29 +119,46 @@ class Application extends React.Component {
     });
   }
 
-  _uploadStarted() {
+  _uploadStarted(files) {
+    const newFiles = files.data.map((file) => {
+      return {
+        path: file,
+        key: file.split('/').pop(),
+        status: 'uploading',
+        url: '',
+      };
+    });
+
     this.setState({
+      files: this.state.files.concat(newFiles),
       status: 'Uploading...',
     });
   }
 
   _uploadFailed(error) {
+    const newFiles = this.state.files;
+    let updated = this.state.files.find((file) => file.key === error.data.Key);
+    updated.status = 'failed';
+    updated.error = error;
+
     this.setState({
-      status: 'Ready',
+      files: newFiles,
     });
   }
 
   _uploadSucceeded(data) {
+    const newFiles = this.state.files;
+    let updated = this.state.files.find((file) => file.key === data.data.Key);
+    updated.url = data.data.Location;
+    updated.status = 'uploaded';
+
     this.setState({
-      status: 'Ready',
+      files: newFiles,
     });
   }
 
   _uploadProgressed(progress) {
-    console.log(process);
-    this.setState({
-      status: 'Uploading...',
-    });
+
   }
 
   render() {

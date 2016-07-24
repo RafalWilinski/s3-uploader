@@ -29,8 +29,8 @@ const sendNotification = (title, message) => {
   });
 };
 
-const handleUpload = (uploadEventEmitter) => {
-  sendWebContentsMessage('UPLOAD_START');
+const handleUpload = (uploadEventEmitter, files) => {
+  sendWebContentsMessage('UPLOAD_START', files);
 
   uploadEventEmitter.on('error', (error) => {
     sendNotification('Upload Error!', 'Click icon for more details...');
@@ -54,7 +54,7 @@ const handleFiles = (files) => {
     files.forEach((file) => {
       fs.readFile(file, (err, data) => {
         if (err) throw new Error(err);
-        handleUpload(s3.uploadFile(file.split('/').pop(), data));
+        handleUpload(s3.uploadFile(file.split('/').pop(), data), files);
       });
     });
   } else {
