@@ -6,21 +6,41 @@ import IpcService from '../IpcRendererService';
 
 import '../styles/main.scss';
 
+/**
+ * Main Application react container responsible for front-end logic.
+ * Subscribes to IPCRendererService for main process events, displays presentational components, saves credentials and more.
+ * Due to lack of Redux, every information is stored in this.state.
+ */
 class Application extends React.Component {
+
+  /**
+   * constructor
+   * @param {object} props
+   */
   constructor(props) {
     super(props);
 
     this.state = {
+      // Default permissions e.g. public-read-write
       ACL: '',
+      // Default bucket name
       bucket: '',
+      // Available buckets array
       buckets: [],
+      // List of files which are being uploaded and were already uploaded
       files: [],
-      loginError: {},
+      // Tells whether user has entered correct AWS credentials
       isLoggedIn: false,
+      // Set to true during S3.listBuckets
       isLoading: false,
+      // Set to true after confirming settings in StatusMenu component
       isSettingsSet: false,
+      // Contains error information if applicable
+      loginError: {},
+      // Default region, e.g. us-east-1
       region: '',
-      status: 'Ready',
+      // Default storage class, e.g. REDUCED_REDUNDANCY
+      storageClass: '',
     };
 
     this.bucketsLoaded = this._bucketsLoaded.bind(this);
@@ -33,6 +53,9 @@ class Application extends React.Component {
     this.uploadSucceeded = this._uploadSucceeded.bind(this);
     this.uploadProgressed = this._uploadProgressed.bind(this);
 
+    /**
+     * Subscribe for events from Electron main process related with uploading files.
+     */
     IpcService.listenForUploadEvents(
       this.uploadFailed,
       this.uploadSucceeded,
@@ -41,6 +64,12 @@ class Application extends React.Component {
     );
   }
 
+
+  /**
+   * Procedure fired when bucket list is fetched using AWS SDK.
+   * @param payload
+   * @private
+   */
   _bucketsLoaded(payload) {
     this.setState({
       buckets: payload.Buckets,
@@ -50,6 +79,13 @@ class Application extends React.Component {
     });
   }
 
+  /**
+   * Procedure fired when user enters credentials in AccessForm component. Calls AWS.S3.listBuckets
+   * function with provided keys.
+   * @param accessKey
+   * @param secretKey
+   * @private
+   */
   _credentialsSubmitted(accessKey, secretKey) {
     this.startLoading();
 
@@ -66,16 +102,20 @@ class Application extends React.Component {
       });
   }
 
+  /**
+   * Rendering helper function, returns presentational component suitable for current app status.
+   * E.g. After entering credentials and before S3 API response, loading indicator is displayed.
+   * @returns {XML}
+   * @private
+   */
   _getMenu() {
-    console.log("Files: " + JSON.stringify(this.state.files));
     if (this.state.isLoading) {
       return <div className="spin-box"></div>;
     }
 
     if (this.state.isLoggedIn) {
       if (this.state.isSettingsSet) {
-        return <StatusMenu status={this.state.status}
-                           bucket={this.state.bucket}
+        return <StatusMenu bucket={this.state.bucket}
                            ACL={this.state.ACL}
                            region={this.state.region}
                            files={this.state.files}/>;
@@ -90,6 +130,14 @@ class Application extends React.Component {
     }
   }
 
+  /**
+   * Procedure fired after saving settings in SettingsMenu presentational component.
+   * Saves configuration in localStorage and current state. Also sends this information to main
+   * electron process.
+   *
+   * @param settings
+   * @private
+   */
   _settingsSet(settings) {
     window.localStorage.setItem('storageClass', settings.storageClass);
     window.localStorage.setItem('ACL', settings.ACL);
@@ -108,17 +156,31 @@ class Application extends React.Component {
     this.setState({
       ACL: settings.ACL,
       bucket: settings.bucket,
-      region: settings.region,
       isSettingsSet: true,
+      region: settings.region,
+      storageClass: settings.storageClass,
     });
   }
 
+  /**
+   * Shows loading indicator
+   * @private
+   */
   _startLoading() {
     this.setState({
       isLoading: true
     });
   }
 
+  // TODO: Add directories support and abort function
+  /**
+   * Procedure fired when Electron main process notifies renderer process via IPC about upload process initiation.
+   * Appends this.state.files array with dropped files.
+   * Contains files array of file paths dropped on icon.
+   *
+   * @param files
+   * @private
+   */
   _uploadStarted(files) {
     const newFiles = files.data.map((file) => {
       return {
@@ -131,10 +193,16 @@ class Application extends React.Component {
 
     this.setState({
       files: this.state.files.concat(newFiles),
-      status: 'Uploading...',
     });
   }
 
+  /**
+   * Procedure fired when Electron main process notifies renderer process via IPC about error during upload.
+   * Contains error information.
+   *
+   * @param error
+   * @private
+   */
   _uploadFailed(error) {
     const newFiles = this.state.files;
     let updated = this.state.files.find((file) => file.key === error.data.Key);
@@ -146,6 +214,11 @@ class Application extends React.Component {
     });
   }
 
+  /**
+   * Procedure fired when Electron main process notifies renderer process via IPC about successful upload.
+   * @param data
+   * @private
+   */
   _uploadSucceeded(data) {
     const newFiles = this.state.files;
     let updated = this.state.files.find((file) => file.key === data.data.Key);
@@ -157,10 +230,19 @@ class Application extends React.Component {
     });
   }
 
+  /**
+   * Procedure fired when Electron main process notifies renderer process via IPC about progression in uploading a file(s).
+   * @param progress
+   * @private
+   */
   _uploadProgressed(progress) {
 
   }
 
+  /**
+   * React built-in function
+   * @returns {XML}
+   */
   render() {
     return (
       <div>
