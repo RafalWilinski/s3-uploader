@@ -56,7 +56,7 @@ class Application extends React.Component {
     /**
      * Subscribe for events from Electron main process related with uploading files.
      */
-    IpcService.listenForUploadEvents(
+    IpcService.subscribeUploadEvents(
       this.uploadFailed,
       this.uploadSucceeded,
       this.uploadProgressed,

@@ -2,7 +2,17 @@ const AWS = require('aws-sdk');
 const EventEmitter = require('events');
 const configService = require('./ConfigurationService');
 
+/**
+ * High-level wrapper for AWS.S3 API with Promises instead of callbacks.
+ */
 class S3Service {
+  /**
+   * Constructor, creates S3Service object with AWS.S3 property.
+   *
+   * Constructor does not validate credentials validity.
+   * @param accessKey
+   * @param secretKey
+   */
   constructor(accessKey, secretKey) {
     this.accessKey = accessKey;
     this.secretKey = secretKey;
@@ -17,6 +27,10 @@ class S3Service {
     this.s3 = new AWS.S3();
   }
 
+  /**
+   * AWS.S3.listBuckets wrapper.
+   * @returns {Promise}
+   */
   getBuckets() {
     return new Promise((resolve, reject) => {
       this.s3.listBuckets((err, data) => {
@@ -28,6 +42,14 @@ class S3Service {
     });
   }
 
+  /**
+   * AWS.S3.upload wrapper with some values preloaded from local configuration.
+   * Returns EventEmitter emiting following events:
+   * - error
+   * - progress
+   * - success
+   * @returns {EventEmitter}
+   */
   uploadFile(fileName, data) {
     const uploadEventEmitter = new EventEmitter();
 

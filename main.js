@@ -5,6 +5,9 @@ const { ipcMain, clipboard } = require('electron');
 const configService = require('./ConfigurationService');
 const S3Service = require('./S3Service');
 
+/**
+ * Electron window high-level wrapped constructor.
+ */
 const mb = menubar({
   width: 400,
   height: 300,
@@ -12,6 +15,12 @@ const mb = menubar({
 
 let s3 = null;
 
+/**
+ * Sends data from main Electron process to renderer process.
+ * Works only if window has been instantiated first.
+ * @param thread
+ * @param data
+ */
 const sendWebContentsMessage = (thread, data) => {
   if (mb.window !== undefined) {
     mb.window.webContents.send(thread, {
@@ -22,6 +31,11 @@ const sendWebContentsMessage = (thread, data) => {
   }
 };
 
+/**
+ * Sends OS-level native notification invoker
+ * @param title
+ * @param message
+ */
 const sendNotification = (title, message) => {
   notifier.notify({
     title,
@@ -29,6 +43,16 @@ const sendNotification = (title, message) => {
   });
 };
 
+/**
+ * S3.ManagedUpload high-level wrapper.
+ *
+ * Forwards EventEmitter events to IPC Bus to renderer process.
+ * Sends notification if process fails or succeeds.
+ * Automatically replaces clipboard contents with URL to file in AWS S3.
+ *
+ * @param uploadEventEmitter
+ * @param files
+ */
 const handleUpload = (uploadEventEmitter, files) => {
   sendWebContentsMessage('UPLOAD_START', files);
 
@@ -49,6 +73,17 @@ const handleUpload = (uploadEventEmitter, files) => {
   });
 };
 
+/**
+ * TODO: Fix event duplication.
+ * TODO: (called forEach file, each time containing whole array of files instead of one)
+ * Callback function for handling drop-files events.
+ *
+ * Takes array of files (directories) as argument.
+ * Files are then read using fs module and pushed to S3Service.
+ *
+ * Fails if S3Service has been not initialized yet.
+ * @param files
+ */
 const handleFiles = (files) => {
   if (s3 !== null) {
     files.forEach((file) => {
@@ -62,6 +97,12 @@ const handleFiles = (files) => {
   }
 };
 
+/**
+ * MenuBar EventEmitter listener.
+ *
+ * Listens for window readiness and loads config from file.
+ * If config is present, instantiates S3Service basing on that information.
+ */
 mb.on('ready', () => {
   configService.loadConfig()
     .then((config) => {
@@ -77,6 +118,11 @@ mb.on('ready', () => {
   mb.tray.on('drop-files', (event, files) => handleFiles(files));
 });
 
+
+/**
+ * IPC EventEmitter listener.
+ * Receiver of events from renderer process.
+ */
 ipcMain.on('GET_BUCKETS', (event, arg) => {
   s3 = new S3Service(arg.accessKey, arg.secretKey);
 

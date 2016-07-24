@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * List of available storage options in AWS S3.
+ * @type {*[]}
+ */
 const storageOptions = [
   {
     displayName: 'Standard',
@@ -13,6 +17,10 @@ const storageOptions = [
   },
 ];
 
+/**
+ * List of available ACL policies in AWS S3.
+ * @type {*[]}
+ */
 const permissionsOptions = [
   {
     displayName: 'Private',
@@ -27,6 +35,11 @@ const permissionsOptions = [
 ];
 
 class SettingsMenu extends React.Component {
+
+  /**
+   * Constructor, sets default state and binds context to used functions.
+   * @param props
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -43,12 +56,24 @@ class SettingsMenu extends React.Component {
     this.checkSelection = this._checkSelection.bind(this);
   }
 
+  /**
+   * Changes this.state when user selects new default bucket.
+   * @param bucket
+   * @private
+   */
   _changeDefault(bucket) {
     this.setState({
       bucket,
     });
   }
 
+  /**
+   * Checks if selected item is currently selected.
+   * @param item
+   * @param selection
+   * @param defaultClasses
+   * @private
+   */
   _checkSelection(item, selection, defaultClasses = '') {
     if(item === selection) {
       return 'selected ' + defaultClasses;
@@ -57,26 +82,47 @@ class SettingsMenu extends React.Component {
     }
   }
 
-  _storageOptionChange(e, storageClass) {
-    e.preventDefault();
+  /**
+   * Changes this.state when user changes storage class.
+   * @param event
+   * @param storageClass
+   * @private
+   */
+  _storageOptionChange(event, storageClass) {
+    event.preventDefault();
     this.setState({
       storageClass,
     });
   }
 
-  _permissionOptionChange(e, ACL) {
-    e.preventDefault();
+  /**
+   * Changes this.state when user changes default upload permissions
+   * @param event
+   * @param ACL
+   * @private
+   */
+  _permissionOptionChange(event, ACL) {
+    event.preventDefault();
     this.setState({
       ACL,
     });
   }
 
+  /**
+   * Changes this.state when user toggles encryption
+   * @param event
+   * @private
+   */
   _encryptionOptionChange(event) {
     this.setState({
       encryption: event.target.checked ? 'AES256' : '',
     });
   }
 
+  /**
+   * React built-in function
+   * @returns {XML}
+   */
   render() {
     return (
       <div className="permissions-dialog-container">
@@ -131,7 +177,9 @@ class SettingsMenu extends React.Component {
 }
 
 SettingsMenu.propTypes = {
+  // Function forwarded from app container, to be called when confirming settings
   onSettingsSelected: React.PropTypes.func.isRequired,
+  // List of buckets returned from S3Service
   buckets: React.PropTypes.array.isRequired,
 };
 

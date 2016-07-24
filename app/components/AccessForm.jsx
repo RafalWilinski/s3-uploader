@@ -2,12 +2,28 @@ import React from 'react';
 
 import '../styles/base/_animations.scss';
 
+/**
+ * TODO: Implement dropdown list with these and show them below credentials form.
+ *
+ * List of available regions in AWS S3.
+ * @type {string[]}
+ */
 const regions = [
   'us-east-1', 'us-west-1', 'us-west-2', 'ap-south-1', 'ap-northeast-1', 'ap-northeast-2',
   'ap-southeast-1', 'ap-southeast-2', 'eu-central-1', 'eu-west-1', 'sa-east-1',
 ];
 
+/**
+ * Presentational Component for displaying 'login form'.
+ *
+ * Handles validation and passes data to higher-order components/containers.
+ */
 class AccessForm extends React.Component {
+
+  /**
+   * Constructor, sets default state and binds context to used functions.
+   * @param props
+   */
   constructor(props) {
     super(props);
 
@@ -21,6 +37,11 @@ class AccessForm extends React.Component {
     this.handleSecretKeyChange = this._handleSecretKeyChange.bind(this);
   };
 
+  /**
+   * React built-in function.
+   *
+   * After mounting component, tries to automatically fill out form with saved credentials.
+   */
   componentDidMount() {
     const savedAccessKey = window.localStorage.getItem('accessKey') || '';
     const savedSecretKey = window.localStorage.getItem('secretKey') || '';
@@ -33,6 +54,13 @@ class AccessForm extends React.Component {
     });
   }
 
+  /**
+   * Procedure called when submitting form.
+   *
+   * Trims input, handles it and adds some fancy animations if something is wrong.
+   * @param event
+   * @private
+   */
   _handleSubmit(event) {
     event.preventDefault();
     const accessKey = this.state.accessKey.trim();
@@ -49,6 +77,7 @@ class AccessForm extends React.Component {
         document.getElementById('secret_key_input').className = 'animated shake';
       }
 
+      // Diminish animation after it ends.
       setTimeout(() => {
         document.getElementById('access_key_input').className = '';
         document.getElementById('secret_key_input').className = '';
@@ -56,25 +85,38 @@ class AccessForm extends React.Component {
     }
   };
 
+  /**
+   * Changes this.state when user types something to access key field.
+   * @param event
+   * @private
+   */
   _handleAccessKeyChange(event) {
     this.setState({
       accessKey: event.target.value
     });
   };
 
+  /**
+   * Changes this.state when user types something to secret key field.
+   * @param event
+   * @private
+   */
   _handleSecretKeyChange(event) {
     this.setState({
       secretKey: event.target.value
     });
   };
 
+  /**
+   * React built-in function.
+   * @returns {XML}
+   */
   render() {
     return (
       <div className="access-form-container">
         <div>
           <div>
-            <p className="extra-margin">In order to access S3, please provide AWS Access Key and Secret Key of user with
-              sufficient permissions</p>
+            <p className="extra-margin">In order to access S3, please provide AWS Access Key and Secret Key of user with sufficient permissions</p>
             <form onSubmit={this.handleSubmit}>
               <input type="text"
                      name="access_key"
@@ -105,7 +147,9 @@ class AccessForm extends React.Component {
 }
 
 AccessForm.propTypes = {
+  // Function forwarded from app container, called after validation
   onCredentialsSubmitted: React.PropTypes.func.isRequired,
+  // Error data returned from container
   error: React.PropTypes.object.isRequired,
 };
 

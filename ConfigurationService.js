@@ -1,6 +1,21 @@
 const fs = require('fs');
+/**
+ * Default file path where credentials will be stored.
+ * @type {string}
+ */
 const configFilePath = './.awscredentials.json';
 
+/**
+ * Encoding used while reading persistent storage.
+ * @type {string}
+ */
+const defaultEncoding = 'utf-8';
+
+/**
+ * Initial Configuration.
+ * @type {{accessKey: string, secretKey: string, bucket: string, ACL: string, storageClass: string,
+ * encryption: boolean}}
+ */
 const configuration = {
   accessKey: '',
   secretKey: '',
@@ -10,6 +25,10 @@ const configuration = {
   encryption: false,
 };
 
+/**
+ * Merges old config with provided one. Saves changes to persistent storage.
+ * @param newConfig
+ */
 const updateConfig = (newConfig) => {
   Object.assign(configuration, newConfig);
 
@@ -18,8 +37,11 @@ const updateConfig = (newConfig) => {
   });
 };
 
+/**
+ * Loads configuration from persistent storage if it's possible.
+ */
 const loadConfig = () => new Promise((resolve, reject) => {
-  fs.readFile(configFilePath, 'utf-8', (err, data) => {
+  fs.readFile(configFilePath, defaultEncoding, (err, data) => {
     if (err) {
       return reject(err);
     }
@@ -29,6 +51,10 @@ const loadConfig = () => new Promise((resolve, reject) => {
   });
 });
 
+/**
+ * Returns value for given key from configuration directory. Fast, in-memory function (fs not used).
+ * @param key
+ */
 const getItem = (key) => configuration[key];
 
 module.exports = {
