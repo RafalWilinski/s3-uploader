@@ -1,4 +1,17 @@
 import React from 'react';
+const { clipboard } = require('electron');
+
+/**
+ * Changes clipboard contents to file URL from AWS S3 if file was uploaded successfully.
+ * @param file
+ */
+const saveLinkToClipboard = (file) => {
+  if (file.status === 'uploaded' && file.url !== '') {
+    clipboard.writeText(file.url);
+  } else {
+    console.warn('File has been not uploaded yet!');
+  }
+};
 
 /**
  * Presentational component showing all processed files statuses and current mode.
@@ -11,10 +24,6 @@ const StatusMenu = (props) => (
         <span>Permissions: {props.ACL}</span>
         <span>Storage Class: {props.storageClass}</span>
       </div>
-      <div className="align-end">
-        <button className="status-settings">
-        </button>
-      </div>
     </div>
     {
       props.files.length === 0
@@ -26,7 +35,7 @@ const StatusMenu = (props) => (
         <ul className="status-menu-filelist">
           {
             props.files.map((file, index) =>
-              <li key={index}>
+              <li key={index} onClick={(e) => saveLinkToClipboard(file)}>
                 <span>{file.key}</span>
                 <div className={file.status + ' status-icon'}/>
               </li>

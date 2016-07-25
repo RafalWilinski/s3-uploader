@@ -24,24 +24,10 @@
 
   .align-start {
     align-items: flex-start;
-    align-content: flex-start;
-  }
-
-  .align-end {
-    align-items: stretch;
-    align-content: stretch;
-    justify-content: flex-end;
   }
 
   .bigger {
     font-size: 1.1em;
-  }
-
-  button {
-    background-image: url('../images/settings.png');
-    background-size: contain;
-    width: 24px;
-    height: 24px;
   }
 }
 
@@ -56,7 +42,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 35px;
+    height: 15px;
     padding: 8px;
   }
 
@@ -73,6 +59,10 @@
 
   .uploading {
     animation: blink 1s linear infinite;
+    background-color: $green-color;
+    border-radius: 100%;
+    width: 8px;
+    height: 8px;
   }
 
   .failed {
