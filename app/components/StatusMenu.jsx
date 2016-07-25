@@ -3,48 +3,40 @@ import React from 'react';
 /**
  * Presentational component showing all processed files statuses and current mode.
  */
-class StatusMenu extends React.Component {
-
-  /**
-   * Render helper function, shows array of files and current app status
-   * @returns {XML}
-   */
-  getMenu() {
-    return (
-      <div>
-        <div>
-          <p>Bucket Selected: {this.props.bucket}</p>
-          <p>Permissions: {this.props.ACL}</p>
+const StatusMenu = (props) => (
+  <div className="status-menu-container">
+    <div className="status-menu-bar">
+      <div className="align-start">
+        <span className="bigger">{props.bucket}</span>
+        <span>Permissions: {props.ACL}</span>
+        <span>Storage Class: {props.storageClass}</span>
+      </div>
+      <div className="align-end">
+        <button className="status-settings">
+        </button>
+      </div>
+    </div>
+    {
+      props.files.length === 0
+        ?
+        <div className="status-menu-nofiles">
+          <span>No files were uploaded yet.</span>
         </div>
-        <div>
+        :
+        <ul className="status-menu-filelist">
           {
-            this.props.files.map((file, index) =>
-              <div key={index}>
-                <p>{file.key}</p>
-                <span>{file.status}</span>
-                <button>Abort</button>
-              </div>
+            props.files.map((file, index) =>
+              <li key={index}>
+                <span>{file.key}</span>
+                <div className={file.status + ' status-icon'}/>
+              </li>
             )
           }
-        </div>
-      </div>
-    );
-  }
+        </ul>
+    }
+  </div>
+);
 
-  /**
-   * React built-in function
-   * @returns {XML}
-   */
-  render() {
-    return (
-      <div className="extra-margin">
-        {
-          this.getMenu()
-        }
-      </div>
-    );
-  }
-}
 
 StatusMenu.propTypes = {
   // Current permissions e.g. public-read-write

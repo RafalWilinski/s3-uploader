@@ -33,9 +33,11 @@
     "eslint": "^3.0.1",
     "eslint-config-airbnb-base": "^4.0.0",
     "eslint-plugin-import": "^1.10.2",
+    "file-loader": "^0.9.0",
     "node-sass": "^3.8.0",
     "sass-loader": "^4.0.0",
     "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
     "webpack": "^1.13.1"
   },
   "dependencies": {

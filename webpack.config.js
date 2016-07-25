@@ -21,6 +21,10 @@ module.exports = {
         test: /\.scss?$/,
         exclude: /(node_modules)/,
         loader: 'style!css!sass',
+      }, {
+        test: /\.(jpg|png)$/,
+        loader: 'url?limit=25000',
+        include: /(app)/,
       }
     ],
     noParse: [

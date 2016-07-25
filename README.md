@@ -10,4 +10,4 @@ Simply click on bucket and follow instructions. You'll need access key and secre
 You can also try modifying `.awscredentials.json` file on your own. 
 
 #### Credits
-Icon by parkjisun: https://thenounproject.com/search/?q=bucket&i=191419
+Special thanks to parkjisun, Sergey Furtaev, Timothy Miller, Joe Mortell for Icons from nounproject.com

@@ -115,10 +115,11 @@ class Application extends React.Component {
 
     if (this.state.isLoggedIn) {
       if (this.state.isSettingsSet) {
-        return <StatusMenu bucket={this.state.bucket}
-                           ACL={this.state.ACL}
+        return <StatusMenu ACL={this.state.ACL}
+                           bucket={this.state.bucket}
+                           files={this.state.files}
                            region={this.state.region}
-                           files={this.state.files}/>;
+                           storageClass={this.state.storageClass} />;
       } else {
         return <SettingsMenu onSettingsSelected={this.settingsSet}
                              buckets={this.state.buckets}
@@ -126,7 +127,7 @@ class Application extends React.Component {
       }
     } else {
       return <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
-                         error={this.state.loginError}/>
+                         error={this.state.loginError} />
     }
   }
 

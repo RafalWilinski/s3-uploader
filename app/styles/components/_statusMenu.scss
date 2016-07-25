@@ -1,0 +1,100 @@
+@import '../base/_main';
+
+.status-menu-container {
+  width: 100%;
+  height: 95vh;
+}
+
+.status-menu-bar {
+  background-color: $green-color;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  width: 100%;
+  height: 40px;
+
+  p, span {
+    color: $white-color;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .align-start {
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+
+  .align-end {
+    align-items: stretch;
+    align-content: stretch;
+    justify-content: flex-end;
+  }
+
+  .bigger {
+    font-size: 1.1em;
+  }
+
+  button {
+    background-image: url('../images/settings.png');
+    background-size: contain;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.status-menu-filelist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  li {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 35px;
+    padding: 8px;
+  }
+
+  .status-icon {
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 16px;
+    width: 16px;
+  }
+
+  .uploaded {
+    background-image: url('../images/okay.png');
+  }
+
+  .uploading {
+    animation: blink 1s linear infinite;
+  }
+
+  .failed {
+    background-image: url('../images/error.png');
+  }
+
+  li:hover {
+    background-color: $grey-color;
+  }
+}
+
+.status-menu-nofiles {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  height: 80%;
+  justify-content: center;
+  width: 100%;
+}
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
