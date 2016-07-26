@@ -22,28 +22,29 @@ class Application extends React.Component {
 
     this.state = {
       // Default permissions e.g. public-read-write
-      ACL: '',
+      ACL: window.localStorage.getItem('ACL') || false,
       // Default bucket name
-      bucket: '',
+      bucket: window.localStorage.getItem('bucket') || '',
       // Available buckets array
       buckets: [],
       // List of files which are being uploaded and were already uploaded
       files: [],
       // Tells whether user has entered correct AWS credentials
-      isLoggedIn: false,
+      isLoggedIn: window.localStorage.getItem('isSetupCorrectly') || false,
       // Set to true during S3.listBuckets
       isLoading: false,
       // Set to true after confirming settings in StatusMenu component
-      isSettingsSet: false,
+      isSettingsSet: window.localStorage.getItem('isSetupCorrectly') || false,
       // Contains error information if applicable
       loginError: {},
       // Default storage class, e.g. REDUCED_REDUNDANCY
-      storageClass: '',
+      storageClass: window.localStorage.getItem('storageClass') || '',
     };
 
     this.bucketsLoaded = this._bucketsLoaded.bind(this);
     this.credentialsSubmitted = this._credentialsSubmitted.bind(this);
     this.getMenu = this._getMenu.bind(this);
+    this.resetSettings = this._resetSettings.bind(this);
     this.settingsSet = this._settingsSet.bind(this);
     this.startLoading = this._startLoading.bind(this);
     this.uploadStarted = this._uploadStarted.bind(this);
@@ -102,6 +103,8 @@ class Application extends React.Component {
     IpcService.requestBuckets(accessKey, secretKey)
       .then((data) => {
         this.bucketsLoaded(data);
+        window.localStorage.setItem('accessKey', accessKey);
+        window.localStorage.setItem('secretKey', secretKey);
       })
       .catch((loginError) => {
         this.setState({
@@ -128,7 +131,8 @@ class Application extends React.Component {
         return <StatusMenu ACL={this.state.ACL}
                            bucket={this.state.bucket}
                            files={this.state.files}
-                           storageClass={this.state.storageClass} />;
+                           resetSettings={this.resetSettings}
+                           storageClass={this.state.storageClass}/>;
       } else {
         return <SettingsMenu onSettingsSelected={this.settingsSet}
                              buckets={this.state.buckets}
@@ -138,6 +142,15 @@ class Application extends React.Component {
       return <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
                          error={this.state.loginError} />
     }
+  }
+
+  _resetSettings() {
+    window.localStorage.setItem('isSetupCorrectly', false);
+
+    this.setState({
+      isLoggedIn: false,
+      isSettingsSet: false,
+    });
   }
 
   /**
@@ -153,6 +166,7 @@ class Application extends React.Component {
     window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
     window.localStorage.setItem('bucket', settings.bucket);
+    window.localStorage.setItem('isSetupCorrectly', true);
 
     IpcService.saveConfig({
       ACL: settings.ACL,

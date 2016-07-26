@@ -29,6 +29,18 @@
   .bigger {
     font-size: 1.1em;
   }
+
+  .settings {
+    height: 20px;
+    width: 20px;
+    background-image: url('../images/settings.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    position: absolute;
+  }
 }
 
 .status-menu-filelist {
@@ -46,6 +58,10 @@
     padding: 8px;
   }
 
+  li:hover {
+    background-color: $grey-color;
+  }
+
   .status-icon {
     background-size: contain;
     background-repeat: no-repeat;
@@ -57,20 +73,16 @@
     background-image: url('../images/okay.png');
   }
 
+  .failed {
+    background-image: url('../images/error.png');
+  }
+
   .uploading {
     animation: blink 1s linear infinite;
     background-color: $green-color;
     border-radius: 100%;
     width: 8px;
     height: 8px;
-  }
-
-  .failed {
-    background-image: url('../images/error.png');
-  }
-
-  li:hover {
-    background-color: $grey-color;
   }
 }
 

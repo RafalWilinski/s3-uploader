@@ -8,9 +8,9 @@
     "clean": "rm -fr node_modules && npm install",
     "eslint": "eslint .",
     "prod": "npm prune --production",
-    "package-osx": "npm run prod && electron-packager . S3-Uploader --platform=darwin",
-    "package-win": "npm run prod && electron packager . S3-Uploader --platform=win --arch=x64",
-    "package-linux": "npm run prod && electron-packager . S3-Uploader --platform=linux --arch=x64"
+    "package-osx": "npm run prod && electron-packager . --platform=darwin --arch=x64",
+    "package-win": "npm run prod && electron packager . --platform=win --arch=x64",
+    "package-linux": "npm run prod && electron-packager . --platform=linux --arch=x64"
   },
   "keywords": [
     "Electron",
@@ -34,18 +34,19 @@
     "devtron": "^1.2.1",
     "electron-debug": "^1.0.1",
     "electron-packager": "^7.3.0",
-    "electron-prebuilt": "^1.2.0",
     "eslint": "^3.0.1",
     "eslint-config-airbnb-base": "^4.0.0",
     "eslint-plugin-import": "^1.10.2",
     "node-sass": "^3.8.0",
     "sass-loader": "^4.0.0",
+    "spectron": "^3.3.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1"
   },
   "dependencies": {
     "aws-sdk": "^2.4.4",
+    "electron-prebuilt": "^1.2.0",
     "menubar": "^4.1.2",
     "node-notifier": "^4.6.0",
     "react": "^15.2.0",

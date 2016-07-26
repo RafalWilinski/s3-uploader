@@ -24,6 +24,7 @@ const StatusMenu = (props) => (
         <span>Permissions: {props.ACL}</span>
         <span>Storage Class: {props.storageClass}</span>
       </div>
+      <div className="settings" onClick={(e) => props.resetSettings()}></div>
     </div>
     {
       props.files.length === 0
@@ -65,6 +66,8 @@ StatusMenu.propTypes = {
   }).isRequired).isRequired,
   // Current storage class mode e.g. STANDARD_IA (Infrequent Access)
   storageClass: React.PropTypes.string.isRequired,
+  // Function invoked when user wants to reset settings
+  resetSettings: React.PropTypes.func.isRequired,
 };
 
 export default StatusMenu;

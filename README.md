@@ -17,10 +17,10 @@ You can also try modifying `.awscredentials.json` file on your own.
 - support for dropping many files at once and directories
 
 #### Todo
-- [ ] Automatic login on start (no need to enter credentials with every start)
+- [x] Automatic login on start (no need to enter credentials with every start)
 - [ ] Add possibility to abort uploads
 - [ ] Tests!
-- [ ] Package for distribution
+- [ ] Packages for distribution
 
 #### Credits
 Special thanks to [parkjisun](https://thenounproject.com/naripuru/), [Sergey Furtaev](https://thenounproject.com/furtaev/), [Timothy Miller](https://thenounproject.com/tmthymllr/), [Joe Mortell](https://thenounproject.com/JoeMortell/) for Icons from [nounproject.com](https://thenounproject.com/)
