@@ -23,6 +23,22 @@ const requestBuckets = (accessKey, secretKey) => new Promise((resolve, reject) =
   });
 });
 
+/**
+ * Sends files dropped on browser window to main process.
+ * @param files
+ */
+const sendDroppedFiles = (files) => {
+  // FileList is not an array - forEach & map are not allowed
+  const newFiles = [];
+  for (let i = 0; i < files.length; i++) {
+    newFiles.push(files[i].path);
+  }
+
+  ipcRenderer.send('DROP_FILES', {
+    files: newFiles,
+  });
+};
+
 
 /**
  * Send action via IPC to save configuration.
@@ -62,4 +78,5 @@ module.exports = {
   subscribeUploadEvents,
   requestBuckets,
   saveConfig,
+  sendDroppedFiles,
 };

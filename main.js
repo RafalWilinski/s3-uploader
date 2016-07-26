@@ -113,6 +113,7 @@ mb.on('ready', () => {
     .catch(() => {
       throw new Error('Error while loading configuration');
     });
+
   mb.tray.on('drop-files', (event, files) => handleFiles(files));
 });
 
@@ -141,4 +142,8 @@ ipcMain.on('GET_BUCKETS', (event, arg) => {
 
 ipcMain.on('UPDATE_CONFIG', (event, arg) => {
   configService.updateConfig(arg);
+});
+
+ipcMain.on('DROP_FILES', (event, arg) => {
+  handleFiles(arg.files);
 });

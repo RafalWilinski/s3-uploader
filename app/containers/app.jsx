@@ -60,6 +60,18 @@ class Application extends React.Component {
       this.uploadProgressed,
       this.uploadStarted
     );
+
+    /**
+     * Add possibility to drag files on window and prevent loading content of it.
+     */
+    window.addEventListener('dragover', (event) => {
+      event.preventDefault();
+    });
+
+    window.addEventListener('drop', (event) => {
+      event.preventDefault();
+      IpcService.sendDroppedFiles(event.dataTransfer.files);
+    });
   }
 
 
