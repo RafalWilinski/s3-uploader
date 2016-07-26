@@ -14,7 +14,7 @@ You can also try modifying `.awscredentials.json` file on your own.
 - upload files by dragging them on status bar icon and on window
 - settings permissions and storage classes for uploads
 - get S3 link by clicking uploaded file from list
-- support for dropping many files at once ~~and directories~~ (*in progress*)
+- support for dropping many files at once and directories
 - ~~aborting uploads in progress~~ (*in progress*)
 
 #### Credits

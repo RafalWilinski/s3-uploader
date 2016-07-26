@@ -1,5 +1,6 @@
 const menubar = require('menubar');
 const fs = require('fs');
+const path = require('path');
 const notifier = require('node-notifier');
 const { ipcMain, clipboard } = require('electron');
 const configService = require('./ConfigurationService');
@@ -51,7 +52,7 @@ const sendNotification = (title, message) => {
  * Automatically replaces clipboard contents with URL to file in AWS S3.
  *
  * @param uploadEventEmitter
- * @param files
+ * @param file
  */
 const handleUpload = (uploadEventEmitter, file) => {
   sendWebContentsMessage('UPLOAD_START', file);
@@ -74,10 +75,42 @@ const handleUpload = (uploadEventEmitter, file) => {
 };
 
 /**
+ * Function returns Promise resolved if supplied path is directory (contains files inside this
+ * directory) or rejected if it's file.
+ * @param file
+ */
+const checkForDirectory = (file) => new Promise((resolve, reject) => {
+  fs.stat(file, (err, stats) => {
+    if (err) {
+      throw new Error(err);
+    } else if (stats.isDirectory()) {
+      fs.readdir(file, (error, files) => {
+        if (err) {
+          throw new Error(error);
+        }
+        return resolve(files.map((node) => path.join(file, node)));
+      });
+    } else {
+      return reject();
+    }
+  });
+});
+
+/**
+ * Reads file and passes it's binary data for upload.
+ * @param file
+ */
+const readFileAndUpload = (file) => {
+  fs.readFile(file, (err, data) => {
+    if (err) throw new Error(err);
+    handleUpload(s3.uploadFile(file.split('/').pop(), data), file);
+  });
+};
+
+/**
  * Callback function for handling drop-files events.
  *
- * Takes array of files (directories) as argument.
- * Files are then read using fs module and pushed to S3Service.
+ * Takes array of files (directories) as argument and processes sequentially for upload.
  *
  * Fails if S3Service has been not initialized yet.
  * @param files
@@ -85,10 +118,9 @@ const handleUpload = (uploadEventEmitter, file) => {
 const handleFiles = (files) => {
   if (s3 !== null) {
     files.forEach((file) => {
-      fs.readFile(file, (err, data) => {
-        if (err) throw new Error(err);
-        handleUpload(s3.uploadFile(file.split('/').pop(), data), file);
-      });
+      checkForDirectory(file)
+        .then((dirFiles) => handleFiles(dirFiles))
+        .catch(() => readFileAndUpload(file));
     });
   } else {
     throw new Error('Client has been not initialized yet!');
