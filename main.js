@@ -53,8 +53,8 @@ const sendNotification = (title, message) => {
  * @param uploadEventEmitter
  * @param files
  */
-const handleUpload = (uploadEventEmitter, files) => {
-  sendWebContentsMessage('UPLOAD_START', files);
+const handleUpload = (uploadEventEmitter, file) => {
+  sendWebContentsMessage('UPLOAD_START', file);
 
   uploadEventEmitter.on('error', (error) => {
     sendNotification('Upload Error!', 'Click icon for more details...');
@@ -74,8 +74,6 @@ const handleUpload = (uploadEventEmitter, files) => {
 };
 
 /**
- * TODO: Fix event duplication.
- * TODO: (called forEach file, each time containing whole array of files instead of one)
  * Callback function for handling drop-files events.
  *
  * Takes array of files (directories) as argument.
@@ -89,7 +87,7 @@ const handleFiles = (files) => {
     files.forEach((file) => {
       fs.readFile(file, (err, data) => {
         if (err) throw new Error(err);
-        handleUpload(s3.uploadFile(file.split('/').pop(), data), files);
+        handleUpload(s3.uploadFile(file.split('/').pop(), data), file);
       });
     });
   } else {

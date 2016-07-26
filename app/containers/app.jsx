@@ -123,7 +123,7 @@ class Application extends React.Component {
       } else {
         return <SettingsMenu onSettingsSelected={this.settingsSet}
                              buckets={this.state.buckets}
-                             ACL={this.state.ACL}/>;
+                             ACL={this.state.ACL} />;
       }
     } else {
       return <AccessForm onCredentialsSubmitted={this.credentialsSubmitted}
@@ -176,24 +176,23 @@ class Application extends React.Component {
   // TODO: Add directories support and abort function
   /**
    * Procedure fired when Electron main process notifies renderer process via IPC about upload process initiation.
-   * Appends this.state.files array with dropped files.
-   * Contains files array of file paths dropped on icon.
+   * Appends this.state.files with dropped files.
+   * Contains file path dropped on icon.
    *
-   * @param files
+   * @param file
    * @private
    */
-  _uploadStarted(files) {
-    const newFiles = files.data.map((file) => {
-      return {
-        path: file,
-        key: file.split('/').pop(),
-        status: 'uploading',
-        url: '',
-      };
+  _uploadStarted(file) {
+    const files = this.state.files;
+    files.push({
+      path: file.data,
+      key: file.data.split('/').pop(),
+      status: 'uploading',
+      url: '',
     });
 
     this.setState({
-      files: this.state.files.concat(newFiles),
+      files
     });
   }
 
