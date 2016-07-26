@@ -5,7 +5,12 @@
   "main": "main.js",
   "scripts": {
     "start": "webpack -w & electron .",
-    "eslint": "eslint ."
+    "clean": "rm -fr node_modules && npm install",
+    "eslint": "eslint .",
+    "prod": "npm prune --production",
+    "package-osx": "npm run prod && electron-packager . S3-Uploader --platform=darwin",
+    "package-win": "npm run prod && electron packager . S3-Uploader --platform=win --arch=x64",
+    "package-linux": "npm run prod && electron-packager . S3-Uploader --platform=linux --arch=x64"
   },
   "keywords": [
     "Electron",
