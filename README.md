@@ -10,7 +10,7 @@ Simply click on bucket and follow instructions. You'll need access key and secre
 You can also try modifying `.awscredentials.json` file on your own. 
 
 #### Features
-- logging in to AWS S3 account ~~in any region you like~~ (*in progress*)
+- logging in to AWS S3 account with access + secret keys
 - upload files by dragging them on status bar icon and on ~~window~~ (*in progress*)
 - settings permissions and storage classes for uploads
 - get S3 link by clicking uploaded file from list

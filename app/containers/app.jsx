@@ -37,8 +37,6 @@ class Application extends React.Component {
       isSettingsSet: false,
       // Contains error information if applicable
       loginError: {},
-      // Default region, e.g. us-east-1
-      region: '',
       // Default storage class, e.g. REDUCED_REDUNDANCY
       storageClass: '',
     };
@@ -118,7 +116,6 @@ class Application extends React.Component {
         return <StatusMenu ACL={this.state.ACL}
                            bucket={this.state.bucket}
                            files={this.state.files}
-                           region={this.state.region}
                            storageClass={this.state.storageClass} />;
       } else {
         return <SettingsMenu onSettingsSelected={this.settingsSet}
@@ -144,21 +141,18 @@ class Application extends React.Component {
     window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
     window.localStorage.setItem('bucket', settings.bucket);
-    window.localStorage.setItem('region', settings.region);
 
     IpcService.saveConfig({
       ACL: settings.ACL,
       storageClass: settings.storageClass,
       encryption: settings.encryption,
       bucket: settings.bucket,
-      region: settings.region,
     });
 
     this.setState({
       ACL: settings.ACL,
       bucket: settings.bucket,
       isSettingsSet: true,
-      region: settings.region,
       storageClass: settings.storageClass,
     });
   }

@@ -3,17 +3,6 @@ import React from 'react';
 import '../styles/base/_animations.scss';
 
 /**
- * TODO: Implement dropdown list with these and show them below credentials form.
- *
- * List of available regions in AWS S3.
- * @type {string[]}
- */
-const regions = [
-  'us-east-1', 'us-west-1', 'us-west-2', 'ap-south-1', 'ap-northeast-1', 'ap-northeast-2',
-  'ap-southeast-1', 'ap-southeast-2', 'eu-central-1', 'eu-west-1', 'sa-east-1',
-];
-
-/**
  * Presentational Component for displaying 'login form'.
  *
  * Handles validation and passes data to higher-order components/containers.
