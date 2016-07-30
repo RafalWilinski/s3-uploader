@@ -9,8 +9,8 @@
     "eslint": "eslint .",
     "prod": "npm prune --production",
     "package-osx": "npm run prod && electron-packager . --platform=darwin --arch=x64",
-    "package-win": "npm run prod && electron packager . --platform=win --arch=x64",
-    "package-linux": "npm run prod && electron-packager . --platform=linux --arch=x64"
+    "package-win": "npm run prod && electron packager . --platform=win --arch=x64 --asar",
+    "package-linux": "npm run prod && electron-packager . --platform=linux --arch=x64 --asar"
   },
   "keywords": [
     "Electron",
