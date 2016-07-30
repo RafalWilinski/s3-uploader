@@ -1,7 +1,7 @@
-## s3-uploader
-macOS app for uploading files
+## aws-s3-uploader
+Simple macOS app for uploading files to Amazon Web Services.
  
-Simply drag & drop files you'd like to upload on bucket icon displayed on your status bar
+Just drag & drop files you'd like to upload on bucket icon displayed on your status bar or application window.
 
 ![Upload Animation](/upload_anim.gif?raw=true "Upload Anim")
 
