@@ -21,6 +21,7 @@ You can also try modifying `.awscredentials.json` file on your own.
 - [ ] Add possibility to abort uploads
 - [ ] Tests!
 - [ ] Packages for distribution
+- [ ] Possibility to disable notifications & automatic URL-to-clipboard write
 
 #### Credits
 Special thanks to [parkjisun](https://thenounproject.com/naripuru/), [Sergey Furtaev](https://thenounproject.com/furtaev/), [Timothy Miller](https://thenounproject.com/tmthymllr/), [Joe Mortell](https://thenounproject.com/JoeMortell/) for Icons from [nounproject.com](https://thenounproject.com/)
