@@ -25,6 +25,8 @@ class Application extends React.Component {
       ACL: window.localStorage.getItem('ACL') || false,
       // Default bucket name
       bucket: window.localStorage.getItem('bucket') || '',
+      // Default folder name
+      folder: window.localStorage.getItem('folder') || '',
       // Available buckets array
       buckets: [],
       // List of files which are being uploaded and were already uploaded
@@ -130,6 +132,7 @@ class Application extends React.Component {
       if (this.state.isSettingsSet) {
         return <StatusMenu ACL={this.state.ACL}
                            bucket={this.state.bucket}
+                           folder={this.state.folder}
                            files={this.state.files}
                            resetSettings={this.resetSettings}
                            storageClass={this.state.storageClass}/>;
@@ -166,6 +169,7 @@ class Application extends React.Component {
     window.localStorage.setItem('ACL', settings.ACL);
     window.localStorage.setItem('encryption', settings.encryption);
     window.localStorage.setItem('bucket', settings.bucket);
+    window.localStorage.setItem('folder', settings.folder);
     window.localStorage.setItem('isSetupCorrectly', true);
 
     IpcService.saveConfig({
@@ -173,11 +177,13 @@ class Application extends React.Component {
       storageClass: settings.storageClass,
       encryption: settings.encryption,
       bucket: settings.bucket,
+      folder: settings.folder,
     });
 
     this.setState({
       ACL: settings.ACL,
       bucket: settings.bucket,
+      folder: settings.folder,
       isSettingsSet: true,
       storageClass: settings.storageClass,
     });
@@ -204,9 +210,10 @@ class Application extends React.Component {
    */
   _uploadStarted(file) {
     const files = this.state.files;
+    const folder = this.state.folder;
     files.push({
       path: file.data,
-      key: file.data.split('/').pop(),
+      key: folder + '/' + file.data.split('/').pop(),
       status: 'uploading',
       url: '',
     });

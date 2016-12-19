@@ -1,6 +1,6 @@
 {
   "name": "s3-uploader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "AWS S3 Uploader ",
   "main": "main.js",
   "scripts": {
@@ -18,10 +18,10 @@
     "Amazon Web Services",
     "React"
   ],
-  "author": "Rafal Wilinski",
+  "author": "Sridar Dhandapani",
   "repository": {
     "type": "git",
-    "url": "https://github.com/RafalWilinski/s3-uploader.git"
+    "url": "https://github.com/sridar-dhandapani/s3-uploader"
   },
   "license": "ISC",
   "devDependencies": {

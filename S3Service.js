@@ -56,7 +56,7 @@ class S3Service {
     this.s3.upload({
       Body: data,
       ACL: configService.getItem('ACL'),
-      Key: fileName,
+      Key: configService.getItem('folder') + '/' + fileName,
       StorageClass: configService.getItem('storageClass'),
       Bucket: configService.getItem('bucket'),
     }, (err, payload) => {

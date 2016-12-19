@@ -4,3 +4,4 @@ public/
 s3-uploader-darwin-x64/
 *.log
 .awscredentials.json
+.DS_Store

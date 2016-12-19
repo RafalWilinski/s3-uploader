@@ -21,6 +21,7 @@ const StatusMenu = (props) => (
     <div className="status-menu-bar">
       <div className="align-start">
         <span className="bigger">{props.bucket}</span>
+				<span>Folder: {props.folder}</span>
         <span>Permissions: {props.ACL}</span>
         <span>Storage Class: {props.storageClass}</span>
       </div>
@@ -37,7 +38,7 @@ const StatusMenu = (props) => (
           {
             props.files.map((file, index) =>
               <li key={index} onClick={(e) => saveLinkToClipboard(file)}>
-                <span>{file.key}</span>
+                <span>{file.key.split('/').pop()}</span>
                 <div className={file.status + ' status-icon'}/>
               </li>
             )
@@ -53,6 +54,8 @@ StatusMenu.propTypes = {
   ACL: React.PropTypes.string.isRequired,
   // Bucket where files fill be uploaded
   bucket: React.PropTypes.string.isRequired,
+  // Folder (Prefix) to where the file will be uploaded.
+  folder: React.PropTypes.string.isRequired,
   // Array of all files (uploaded, failed, in progress)
   files: React.PropTypes.arrayOf(React.PropTypes.shape({
     // Filename

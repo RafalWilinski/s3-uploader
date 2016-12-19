@@ -20,6 +20,7 @@ const configuration = {
   accessKey: '',
   secretKey: '',
   bucket: '',
+  folder: '',
   ACL: '',
   storageClass: '',
   encryption: false,
