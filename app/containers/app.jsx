@@ -253,7 +253,7 @@ class Application extends React.Component {
     updated.status = 'uploaded';
 
     this.setState({
-      files: newFiles,
+      files: newFiles.reverse(),
     });
   }
 
