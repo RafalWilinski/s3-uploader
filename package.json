@@ -21,7 +21,7 @@
   "author": "Sridar Dhandapani",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sridar-dhandapani/s3-uploader"
+    "url": "https://github.com/sridar-dhandapani/s3-uploader.git"
   },
   "license": "ISC",
   "devDependencies": {
