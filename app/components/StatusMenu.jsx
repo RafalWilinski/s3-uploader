@@ -21,7 +21,7 @@ const StatusMenu = (props) => (
     <div className="status-menu-bar">
       <div className="align-start">
         <span className="bigger">{props.bucket}</span>
-				<span>Folder: {props.folder}</span>
+        <span>Folder: {props.folder}</span>
         <span>Permissions: {props.ACL}</span>
         <span>Storage Class: {props.storageClass}</span>
       </div>
@@ -36,7 +36,7 @@ const StatusMenu = (props) => (
         :
         <ul className="status-menu-filelist">
           {
-            props.files.map((file, index) =>
+            props.files.reverse().map((file, index) =>
               <li key={index} onClick={(e) => saveLinkToClipboard(file)}>
                 <span>{file.key.split('/').pop()}</span>
                 <div className={file.status + ' status-icon'}/>

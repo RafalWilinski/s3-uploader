@@ -134,9 +134,9 @@ const handleFiles = (files) => {
  * If config is present, instantiates S3Service basing on that information.
  */
 mb.on('ready', () => {
-	const template = [{label: 'Actions', submenu: [{role: "paste"}, {role: "quit"}]}];
+  const template = [{label: 'Actions', submenu: [{role: "paste"}, {role: "quit"}]}];
   const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  //Menu.setApplicationMenu(menu);
   configService.loadConfig()
     .then((config) => {
       if (config.bucket !== null) {

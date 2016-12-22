@@ -53,11 +53,11 @@ class S3Service {
    */
   uploadFile(fileName, data) {
     const uploadEventEmitter = new EventEmitter();
-		const mimeType  = fileType(data);
+    const mimeType  = fileType(data);
 
     this.s3.upload({
       Body: data,
-			ContentType: mimeType.mime,
+      ContentType: (mimeType) ? mimeType.mime : 'application/octet-stream',
       ACL: configService.getItem('ACL'),
       Key: configService.getItem('folder') + '/' + fileName,
       StorageClass: configService.getItem('storageClass'),
