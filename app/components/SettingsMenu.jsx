@@ -47,6 +47,7 @@ class SettingsMenu extends React.Component {
       ACL: '',
       encryption: '',
       bucket: '',
+      folder: '',
     };
 
     this.storageOptionChange = this._storageOptionChange.bind(this);
@@ -54,6 +55,7 @@ class SettingsMenu extends React.Component {
     this.encryptionOptionChange = this._encryptionOptionChange.bind(this);
     this.changeDefault = this._changeDefault.bind(this);
     this.checkSelection = this._checkSelection.bind(this);
+    this.folderChange = this._changeFolder.bind(this);
   }
 
   /**
@@ -64,6 +66,17 @@ class SettingsMenu extends React.Component {
   _changeDefault(bucket) {
     this.setState({
       bucket,
+    });
+  }
+
+  /**
+   * Changes this.folder with user supplied folder path
+   * @param folder
+   * @private
+   */
+  _changeFolder(folder) {
+    this.setState({
+      folder,
     });
   }
 
@@ -141,6 +154,12 @@ class SettingsMenu extends React.Component {
         </div>
 
         <div className="right column">
+          <form>
+            <p className="form-head">Folder</p>
+            <input type="text" name="folder"
+                    onBlur={(e) => this.folderChange(e.target.value)}>
+            </input>
+          </form>
           <form>
             <p className="form-head">Storage Class</p>
             {

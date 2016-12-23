@@ -2,7 +2,7 @@ const menubar = require('menubar');
 const fs = require('fs');
 const path = require('path');
 const notifier = require('node-notifier');
-const { ipcMain, clipboard } = require('electron');
+const { ipcMain, clipboard, Menu } = require('electron');
 const configService = require('./ConfigurationService');
 const S3Service = require('./S3Service');
 
@@ -134,6 +134,9 @@ const handleFiles = (files) => {
  * If config is present, instantiates S3Service basing on that information.
  */
 mb.on('ready', () => {
+  const template = [{label: 'Actions', submenu: [{role: "paste"}, {role: "quit"}]}];
+  const menu = Menu.buildFromTemplate(template);
+  //Menu.setApplicationMenu(menu);
   configService.loadConfig()
     .then((config) => {
       if (config.bucket !== null) {

@@ -3,7 +3,7 @@ const fs = require('fs');
  * Default file path where credentials will be stored.
  * @type {string}
  */
-const configFilePath = './.awscredentials.json';
+const configFilePath = __dirname + '/.awscredentials.json';
 
 /**
  * Encoding used while reading persistent storage.
@@ -20,6 +20,7 @@ const configuration = {
   accessKey: '',
   secretKey: '',
   bucket: '',
+  folder: '',
   ACL: '',
   storageClass: '',
   encryption: false,

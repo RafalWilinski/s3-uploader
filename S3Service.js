@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const EventEmitter = require('events');
+const fileType = require('file-type');
 const configService = require('./ConfigurationService');
 
 /**
@@ -52,11 +53,13 @@ class S3Service {
    */
   uploadFile(fileName, data) {
     const uploadEventEmitter = new EventEmitter();
+    const mimeType  = fileType(data);
 
     this.s3.upload({
       Body: data,
+      ContentType: (mimeType) ? mimeType.mime : 'application/octet-stream',
       ACL: configService.getItem('ACL'),
-      Key: fileName,
+      Key: configService.getItem('folder') + '/' + fileName,
       StorageClass: configService.getItem('storageClass'),
       Bucket: configService.getItem('bucket'),
     }, (err, payload) => {
